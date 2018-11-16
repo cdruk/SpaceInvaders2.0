@@ -6,31 +6,31 @@
 public class Square {
 
     private Entity entity;
-    private int x;
-    private int y;
+    private int row;
+    private int col;
 
 
     /**
      * Construct the Square with nothing on it.
      *
-     * @param x the x coordinate of the square
-     * @param y the y coordinate of the square
+     * @param row the row coordinate of the square
+     * @param col the col coordinate of the square
      */
-    public Square(int x, int y) {
-        this(Entity.Empty, x, y);
+    public Square(int row, int col) {
+        this(Entity.Empty, row, col);
     }
 
     /**
      * Construct the Square with a specified entity.
      *
      * @param entity the entity that is on the square
-     * @param x      the x coordinate of the square
-     * @param y      the y coordinate of the square
+     * @param row      the row coordinate of the square
+     * @param col      the col coordinate of the square
      */
-    Square(Entity entity, int x, int y) {
+    Square(Entity entity, int row, int col) {
         this.entity = entity;
-        this.x = x;
-        this.y = y;
+        this.row = row;
+        this.col = col;
     }
 
     /**
@@ -52,21 +52,21 @@ public class Square {
         return entity;
     }
 
-    int getX() {
-        return x;
+    int getRow() {
+        return row;
     }
 
-    int getY() {
+    int getCol() {
 
-        return y;
+        return col;
     }
 
-    public void setX(int x) {
-        this.x = x;
+    public void setRow(int row) {
+        this.row = row;
     }
 
-    public void setY(int y) {
-        this.y = y;
+    public void setCol(int col) {
+        this.col = col;
     }
 
     @Override
@@ -77,12 +77,12 @@ public class Square {
         }
 
         Square sq = (Square) obj;
-        return sq.x == x && sq.y == y;
+        return sq.row == row && sq.col == col;
     }
 
     @Override
     public String toString() {
-        return entity + " at (" + x + ", " + y + ")";
+        return entity + " at (" + row + ", " + col + ")";
     }
 
     /**

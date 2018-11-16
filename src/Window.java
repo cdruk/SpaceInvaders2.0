@@ -23,8 +23,8 @@ public class Window extends JFrame {
         GameBoard gameBoard = new GameBoard(SQUARE_SIZE);
         Engine engine = new Engine(gameBoard);
 
-        int canvasWidth = SQUARE_SIZE * gameBoard.BOARD_SIZE;
-        int canvasHeight = SQUARE_SIZE * gameBoard.BOARD_SIZE;
+        int canvasWidth = SQUARE_SIZE * gameBoard.BOARD_COLS;
+        int canvasHeight = SQUARE_SIZE * gameBoard.BOARD_ROWS;
         engine.setPreferredSize(new Dimension(canvasWidth, canvasHeight));
 
         addKeyListener(new MyKeyAdapter());
