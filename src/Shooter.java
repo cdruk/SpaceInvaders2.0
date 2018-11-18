@@ -11,7 +11,6 @@ class Shooter  extends Entity{
         setCol(col);
     }
 
-
     public boolean isExists() {
         return exists;
     }

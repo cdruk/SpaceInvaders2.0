@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public abstract class Entity {
     private int row;
     private int col;
@@ -17,4 +19,5 @@ public abstract class Entity {
     public void setCol(int col) {
         this.col = col;
     }
+
 }

@@ -27,7 +27,7 @@ public class SpaceInvaders extends JFrame {
         int canvasHeight = SQUARE_SIZE * gameBoard.BOARD_ROWS;
         engine.setPreferredSize(new Dimension(canvasWidth, canvasHeight));
 
-        addKeyListener(new MyKeyAdapter());
+       // addKeyListener(new MyKeyAdapter());
 
         cp.add(engine);
 
@@ -96,7 +96,7 @@ public class SpaceInvaders extends JFrame {
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        gameBoard.nextRound();
+                        //gameBoard.nextRound();
                         repaint();
                     }
                 };
@@ -131,7 +131,7 @@ public class SpaceInvaders extends JFrame {
         }
     }
 
-    private class MyKeyAdapter extends KeyAdapter {
+/*    private class MyKeyAdapter extends KeyAdapter {
 
         @Override
         public void keyPressed(KeyEvent keyEvent) {
@@ -152,7 +152,7 @@ public class SpaceInvaders extends JFrame {
             }
 
         }
-    }
+    }*/
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(SpaceInvaders::new);

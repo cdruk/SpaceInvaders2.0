@@ -1,3 +1,5 @@
+import java.awt.*;
+
 public class Alien extends Entity{
 
     private boolean alive = true;

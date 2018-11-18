@@ -8,12 +8,12 @@ import java.util.ArrayList;
 
 class GameBoard {
     protected int cellSize;
-    protected Shooter shooter;
+    private Entity shooter;
     private Projectile projectile;
     private int score = 0;
     private ArrayList<Entity> gameBoard;
     private ImageObserver imgObs;
-    public final int BOARD_ROWS = 15;
+    public final int BOARD_ROWS = 12;
     public final int BOARD_COLS = 15;
     public Direction movement;
     Graphics2D g;
@@ -24,15 +24,13 @@ class GameBoard {
 
     GameBoard(int cellSize) {
         this.cellSize = cellSize;
-        this.shooter = new Shooter(BOARD_ROWS - 1, (BOARD_COLS - 1) / 2);
 
         alienPic = createAlienPic();
         shooterPic = createShooterPic();
         gameBoard = new ArrayList<Entity>();
         generateGameBoard();
         generateAliens();
-        setShooter();
-        //gameBoard.get(getSquareIndex(shooter.getLocation().getCol(), shooter.getLocation().getRow())).setEntity(Square.Entity.Shooter);
+        generateShooter();
     }
 
     private void generateGameBoard() {
@@ -55,7 +53,46 @@ class GameBoard {
     }
 
 
-    public void moveShooter() {
+    private void generateShooter() {
+        shooter = new Shooter(BOARD_ROWS - 1, (BOARD_COLS - 1) / 2);
+        gameBoard.set(getSquareIndex(shooter.getRow(), shooter.getCol()), shooter);
+
+    }
+
+    void paint(Graphics graphics) {
+
+        g = (Graphics2D) graphics;
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        //paintGameboard(g); maybe have each square paint itself?
+        for (Entity entity : gameBoard) {
+            if (entity instanceof Alien) {
+                paintAliens(g, entity);
+            } else if (entity instanceof Shooter) {
+                paintShooter(g);
+            }
+        }
+//        paintAliens(g);
+//        paintShooter(g);
+//        if (shooting) {
+//            paintShot(g);
+//        }
+    }
+
+    private void paintAliens(Graphics2D g, Entity alien) {
+
+//        if (isAlive()) {
+            g.drawImage(alienPic, alien.getCol() * cellSize, alien.getRow() * cellSize, imgObs);
+//        }
+    }
+
+
+    private void paintShooter(Graphics2D g) {
+        g.drawImage(shooterPic, shooter.getCol() * cellSize, shooter.getRow() * cellSize, imgObs);
+
+    }
+
+ /*   public void moveShooter() {
 
         Square current = shooter.getLocation();
         Square newLoc;
@@ -70,16 +107,16 @@ class GameBoard {
         shooter.getLocation().setEntity(Square.Entity.Shooter);
         Square shot = new Square(Square.Entity.Projectile, shooter.getLocation().getCol(), shooter.getLocation().getRow());
         projectile = new Projectile(shot);
-    }
+    }*/
 
 
-    private boolean[] checkBounds() {
+  /*  private boolean[] checkBounds() {
         Square sq = shooter.getLocation();
         boolean tooFarLeft = sq.getCol() == 0;
         boolean tooFarRight = sq.getCol() == BOARD_COLS - 1;
         boolean[] bounds = {tooFarLeft, tooFarRight};
         return bounds;
-    }
+    }*/
 
 
     private void exit() {
@@ -92,7 +129,7 @@ class GameBoard {
     }
 
 
-    private boolean removeAlienIfShot() {
+    /*private boolean removeAlienIfShot() {
 
         boolean dead = false;
         for (int i = aliens.size() - 1; i >= 0; i--) {
@@ -115,28 +152,8 @@ class GameBoard {
             }
         }
         return dead;
-    }
+    }*/
 
-
-    void paint(Graphics graphics) {
-
-        g = (Graphics2D) graphics;
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        //paintGameboard(g); maybe have each square paint itself?
-        paintShooter(g);
-        paintAliens(g);
-        if (shooting) {
-            paintShot(g);
-        }
-    }
-
-    private void paintShooter(Graphics2D g) {
-        int col = shooter.getLocation().getCol();
-        int row = shooter.getLocation().getRow();
-        g.drawImage(shooter.getShooterIcon(), col * cellSize, row * cellSize, imgObs);
-
-    }
 
     private int getSquareIndex(int row, int col) {
         for (int i = 0; i < gameBoard.size(); i++) {
@@ -149,16 +166,6 @@ class GameBoard {
         return -1;
     }
 
-    private void paintAliens(Graphics2D g) {
-
-
-        for (int i = 0; i < aliens.size(); i++) {
-            Alien alien = aliens.get(i);
-            if (alien.isAlive()) {
-                g.drawImage(alienPic, alien.getCol() * cellSize, alien.getRow() * cellSize, imgObs);
-            }
-        }
-    }
 
     private Image createAlienPic() {
         File imageFile = new File("alien.jpg");
@@ -189,7 +196,7 @@ class GameBoard {
         return resized;
     }
 
-    private void paintShot(Graphics2D g) {
+/*    private void paintShot(Graphics2D g) {
         g.setColor(Color.GREEN);
         g.drawLine((shooter.getLocation().getCol() * cellSize) + cellSize / 2,
                 (shooter.getLocation().getRow() * cellSize) + cellSize / 2,
@@ -197,9 +204,9 @@ class GameBoard {
                 (projectile.getLocation().getCol() * cellSize) + cellSize / 2);
         sleep();
 
-    }
+    }*/
 
-    public void shoot() {
+ /*   public void shoot() {
         for (int loc = BOARD_ROWS - 1; loc >= 0; loc--) {
             Square current = new Square(Square.Entity.Projectile, shooter.getLocation().getCol(), loc);
             projectile = new Projectile(current);
@@ -213,12 +220,12 @@ class GameBoard {
             }
         }
 
-    }
+    }*/
 
 
-    public boolean isGameOver() {
+/*    public boolean isGameOver() {
         return aliens.isEmpty() || gameOver;
-    }
+    }*/
 
     private void sleep() {
         try {
@@ -228,7 +235,7 @@ class GameBoard {
         }
     }
 
-    public void nextRound() {
+    /*public void nextRound() {
         Square square;
         for (int i = 0; i < gameBoard.size(); i++) {
             square = gameBoard.get(i);
@@ -240,5 +247,5 @@ class GameBoard {
             }
         }
 
-    }
+    }*/
 }
