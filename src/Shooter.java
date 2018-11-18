@@ -3,25 +3,12 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-class Shooter {
+class Shooter  extends Entity{
     private boolean exists;
-    private Image shooterIcon;
-    private Square location;
 
-    public Shooter(int row, int col, boolean exists) {
-        this.exists = exists;
-        this.location = new Square(row, col);
-        location.setEntity(Square.Entity.Shooter);
-        createIcon();
-    }
-
-    private void createIcon() {
-        File icon = new File("shooter.jpg");
-        try {
-            shooterIcon = ImageIO.read(icon);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public Shooter(int row, int col) {
+        setRow(row);
+        setCol(col);
     }
 
 
@@ -31,23 +18,6 @@ class Shooter {
 
     public void setExists(boolean exists) {
         this.exists = exists;
-    }
-
-    public Image getShooterIcon() {
-        return shooterIcon;
-    }
-
-    public void setShooterIcon(Image shooterIcon) {
-        this.shooterIcon = shooterIcon;
-    }
-
-
-    public Square getLocation() {
-        return location;
-    }
-
-    public void setLocation(Square location) {
-        this.location = location;
     }
 
 }

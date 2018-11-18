@@ -1,30 +1,10 @@
-public class Alien {
-    //location
-    private int col;
-    private int row;
+public class Alien extends Entity{
 
-
-
-    //dead/alive
     private boolean alive = true;
 
     public Alien(int row, int col) {
-        this.row = row;
-        this.col = col;
-    }
-
-
-
-    public int getCol() {
-        return col;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
+        setRow(row);
+        setCol(col);
     }
 
     public boolean isAlive() {

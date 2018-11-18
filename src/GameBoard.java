@@ -11,8 +11,7 @@ class GameBoard {
     protected Shooter shooter;
     private Projectile projectile;
     private int score = 0;
-    private ArrayList<Square> gameBoard;
-    private ArrayList<Alien> aliens;
+    private ArrayList<Entity> gameBoard;
     private ImageObserver imgObs;
     public final int BOARD_ROWS = 15;
     public final int BOARD_COLS = 15;
@@ -20,35 +19,38 @@ class GameBoard {
     Graphics2D g;
     public boolean shooting;
     private Image alienPic;
+    private Image shooterPic;
     private boolean gameOver;
 
     GameBoard(int cellSize) {
         this.cellSize = cellSize;
-        this.shooter = new Shooter(BOARD_ROWS - 1, (BOARD_COLS - 1) / 2, true);
+        this.shooter = new Shooter(BOARD_ROWS - 1, (BOARD_COLS - 1) / 2);
 
         alienPic = createAlienPic();
-        gameBoard = new ArrayList<>();
-        aliens = new ArrayList<>();
+        shooterPic = createShooterPic();
+        gameBoard = new ArrayList<Entity>();
         generateGameBoard();
         generateAliens();
-        gameBoard.get(getSquareIndex(shooter.getLocation().getCol(), shooter.getLocation().getRow())).setEntity(Square.Entity.Shooter);
+        setShooter();
+        //gameBoard.get(getSquareIndex(shooter.getLocation().getCol(), shooter.getLocation().getRow())).setEntity(Square.Entity.Shooter);
     }
 
     private void generateGameBoard() {
-        for (int i = 0; i < BOARD_COLS; i++) {
-            for (int j = 0; j < BOARD_ROWS; j++) {
-                Square square = new Square(i, j);
-                gameBoard.add(square);
+        for (int row = 0; row < BOARD_ROWS; row++) {
+            for (int col = 0; col < BOARD_COLS; col++) {
+                Entity entity = new Empty(row, col);
+                gameBoard.add(entity);
             }
         }
     }
 
     private void generateAliens() {
-        for (int i = 0; i < (5 * BOARD_COLS); i++) {
-            Square square = gameBoard.get(i);
-            square.setEntity(Square.Entity.Alien);
-            Alien alien = new Alien(square.getRow(), square.getCol());
-            aliens.add(alien);
+        for (int row = 0; row < 5; row++) {
+            for (int col = 0; col < BOARD_COLS - 5; col++) {
+                int i = getSquareIndex(row, col);
+                Entity alien = new Alien(row, col);
+                gameBoard.set(i, alien);
+            }
         }
     }
 
@@ -121,6 +123,7 @@ class GameBoard {
         g = (Graphics2D) graphics;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+        //paintGameboard(g); maybe have each square paint itself?
         paintShooter(g);
         paintAliens(g);
         if (shooting) {
@@ -163,6 +166,16 @@ class GameBoard {
             return resize(ImageIO.read(imageFile), cellSize, cellSize);
         } catch (IOException e) {
             System.out.println("Image not found.");
+        }
+        return null;
+    }
+
+    private Image createShooterPic() {
+        File icon = new File("shooter.jpg");
+        try {
+            return ImageIO.read(icon);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return null;
     }

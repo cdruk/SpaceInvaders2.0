@@ -6,13 +6,13 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 
-public class Window extends JFrame {
+public class SpaceInvaders extends JFrame {
 
     private Engine engine;
 
     private static final int SQUARE_SIZE = 40;
 
-    private Window() {
+    private SpaceInvaders() {
         engine = createEngine();
         setWindowProperties();
     }
@@ -155,6 +155,6 @@ public class Window extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(Window::new);
+        SwingUtilities.invokeLater(SpaceInvaders::new);
     }
 }

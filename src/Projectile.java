@@ -1,18 +1,7 @@
-public class Projectile {
+public class Projectile extends Entity {
 
-    private Square location;
-
-
-    public Projectile(Square location) {
-
-        this.location = location;
-    }
-
-    public Square getLocation() {
-        return location;
-    }
-
-    public void setLocation(Square location) {
-        this.location = location;
+    public Projectile(int row, int col) {
+        setRow(row);
+        setCol(col);
     }
 }
