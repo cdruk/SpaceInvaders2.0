@@ -6,9 +6,9 @@ import java.io.IOException;
 class Shooter  extends Entity{
     private boolean exists;
 
-    public Shooter(int row, int col) {
-        setRow(row);
+    public Shooter(int col, int row) {
         setCol(col);
+        setRow(row);
     }
 
     public boolean isExists() {

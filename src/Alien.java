@@ -4,9 +4,9 @@ public class Alien extends Entity{
 
     private boolean alive = true;
 
-    public Alien(int row, int col) {
-        setRow(row);
+    public Alien(int col, int row) {
         setCol(col);
+        setRow(row);
     }
 
     public boolean isAlive() {

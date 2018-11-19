@@ -2,10 +2,8 @@ import java.awt.*;
 
 public class Empty extends Entity {
 
-    public Empty(int row, int col) {
-        setRow(row);
+    public Empty(int col, int row) {
         setCol(col);
+        setRow(row);
     }
-
-
 }

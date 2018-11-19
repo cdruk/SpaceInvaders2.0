@@ -45,10 +45,10 @@ class GameBoard {
     }
 
     private void generateAliens() {
-        for (int row = 0; row < 5; row++) {
-            for (int col = 0; col < BOARD_COLS - 5; col++) {
-                int i = getSquareIndex(row, col);
-                Entity alien = new Alien(row, col);
+        for (int col = 0; col < BOARD_COLS - 5; col++) {
+            for (int row = 0; row < 5; row++) {
+                int i = getSquareIndex(col, row);
+                Entity alien = new Alien(col, row);
                 gameBoard.set(i, alien);
                 allAliens++;
             }
@@ -56,8 +56,8 @@ class GameBoard {
     }
 
     private void generateShooter() {
-        shooter = new Shooter(BOARD_ROWS - 1, (BOARD_COLS - 1) / 2);
-        gameBoard.set(getSquareIndex(shooter.getRow(), shooter.getCol()), shooter);
+        shooter = new Shooter((BOARD_COLS - 1) / 2, BOARD_ROWS - 1);
+        gameBoard.set(getSquareIndex(shooter.getCol(), shooter.getRow()), shooter);
     }
 
     void paint(Graphics graphics) {
@@ -137,7 +137,7 @@ class GameBoard {
             if (entity instanceof Alien) {
                 Alien alien = (Alien) entity;
                 shooting = true;
-                if (projectile.getRow() == alien.getRow() && projectile.getCol() == alien.getCol()) {
+                if (projectile.getCol() == alien.getCol() && projectile.getRow() == alien.getRow()) {
                     alien.setAlive(false);
                     dead = true;
                     deadAliens++;
