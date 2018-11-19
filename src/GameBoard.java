@@ -93,31 +93,27 @@ class GameBoard {
 
     }
 
- /*   public void moveShooter() {
-
-        Square current = shooter.getLocation();
-        Square newLoc;
+   public void moveShooter() {
+        int newLoc;
         boolean[] bounds = checkBounds();
         if (movement == Direction.LEFT && !bounds[0]) {
-            newLoc = gameBoard.get(getSquareIndex(current.getCol() - 1, current.getRow()));
-            shooter.setLocation(newLoc);
+            newLoc = getSquareIndex(shooter.getCol() - 1, shooter.getRow());
+            gameBoard.set(newLoc, shooter);
         } else if (movement == Direction.RIGHT && !bounds[1]) {
-            newLoc = gameBoard.get(getSquareIndex(current.getCol() + 1, current.getRow()));
-            shooter.setLocation(newLoc);
+            newLoc = getSquareIndex(shooter.getCol() + 1, shooter.getRow());
+            gameBoard.set(newLoc, shooter);
         }
-        shooter.getLocation().setEntity(Square.Entity.Shooter);
-        Square shot = new Square(Square.Entity.Projectile, shooter.getLocation().getCol(), shooter.getLocation().getRow());
-        projectile = new Projectile(shot);
-    }*/
+//        Square shot = new Square(Square.Entity.Projectile, shooter.getLocation().getCol(), shooter.getLocation().getRow());
+//        projectile = new Projectile(shot);
+    }
 
 
-  /*  private boolean[] checkBounds() {
-        Square sq = shooter.getLocation();
-        boolean tooFarLeft = sq.getCol() == 0;
-        boolean tooFarRight = sq.getCol() == BOARD_COLS - 1;
+    private boolean[] checkBounds() {
+        boolean tooFarLeft = shooter.getCol() == 0;
+        boolean tooFarRight = shooter.getCol() == BOARD_COLS - 1;
         boolean[] bounds = {tooFarLeft, tooFarRight};
         return bounds;
-    }*/
+    }
 
 
     private void exit() {
@@ -131,22 +127,21 @@ class GameBoard {
 
 
     private boolean removeAlienIfShot() {
-
-        boolean dead = false;
         for (Entity entity : gameBoard) {
             if (entity instanceof Alien) {
                 Alien alien = (Alien) entity;
                 shooting = true;
                 if (projectile.getCol() == alien.getCol() && projectile.getRow() == alien.getRow()) {
                     alien.setAlive(false);
-                    dead = true;
                     deadAliens++;
                     score += 10;
-                    break;
+                    int i = getSquareIndex(projectile.getCol(), projectile.getRow());
+                    gameBoard.set(i, new Empty(projectile.getCol(), projectile.getRow()));
+                    return true;
                 }
             }
         }
-        return dead;
+        return false;
     }
 
 
@@ -204,10 +199,10 @@ class GameBoard {
 
     }*/
 
-    private int getSquareIndex(int row, int col) {
+    private int getSquareIndex(int col, int row) {
         for (int i = 0; i < gameBoard.size(); i++) {
-            if (gameBoard.get(i).getCol() == row) {
-                if (gameBoard.get(i).getRow() == col) {
+            if (gameBoard.get(i).getCol() == col) {
+                if (gameBoard.get(i).getRow() == row) {
                     return i;
                 }
             }

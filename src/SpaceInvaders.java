@@ -133,14 +133,13 @@ public class SpaceInvaders extends JFrame {
                 engine.running = true;
             }
 
-//            if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
-//                engine.gameBoard.movement = Direction.LEFT;
-//                engine.gameBoard.moveShooter();
-//            } else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
-//                engine.gameBoard.movement = Direction.RIGHT;
-//                engine.gameBoard.moveShooter();
-//            } else
-        if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+            if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
+                engine.gameBoard.movement = Direction.LEFT;
+                engine.gameBoard.moveShooter();
+            } else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
+                engine.gameBoard.movement = Direction.RIGHT;
+                engine.gameBoard.moveShooter();
+            } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
                 engine.gameBoard.shoot();
             }
 
