@@ -9,7 +9,7 @@ import java.util.ArrayList;
 class GameBoard {
     protected int cellSize;
     private Entity shooter;
-    private Projectile projectile;
+    private Entity projectile;
     private int score = 0;
     private ArrayList<Entity> gameBoard;
     private ImageObserver imgObs;
@@ -21,6 +21,8 @@ class GameBoard {
     private Image alienPic;
     private Image shooterPic;
     private boolean gameOver;
+    private int allAliens;
+    private int deadAliens;
 
     GameBoard(int cellSize) {
         this.cellSize = cellSize;
@@ -48,15 +50,14 @@ class GameBoard {
                 int i = getSquareIndex(row, col);
                 Entity alien = new Alien(row, col);
                 gameBoard.set(i, alien);
+                allAliens++;
             }
         }
     }
 
-
     private void generateShooter() {
         shooter = new Shooter(BOARD_ROWS - 1, (BOARD_COLS - 1) / 2);
         gameBoard.set(getSquareIndex(shooter.getRow(), shooter.getCol()), shooter);
-
     }
 
     void paint(Graphics graphics) {
@@ -74,15 +75,15 @@ class GameBoard {
         }
 //        paintAliens(g);
 //        paintShooter(g);
-//        if (shooting) {
-//            paintShot(g);
-//        }
+        if (shooting) {
+            paintShot(g);
+        }
     }
 
     private void paintAliens(Graphics2D g, Entity alien) {
 
 //        if (isAlive()) {
-            g.drawImage(alienPic, alien.getCol() * cellSize, alien.getRow() * cellSize, imgObs);
+        g.drawImage(alienPic, alien.getCol() * cellSize, alien.getRow() * cellSize, imgObs);
 //        }
     }
 
@@ -129,31 +130,79 @@ class GameBoard {
     }
 
 
-    /*private boolean removeAlienIfShot() {
+    private boolean removeAlienIfShot() {
 
         boolean dead = false;
-        for (int i = aliens.size() - 1; i >= 0; i--) {
-            int squareLoc = getSquareIndex(aliens.get(i).getRow(), aliens.get(i).getCol());
-
-            if (squareLoc != -1) {
-
-                Square alien = gameBoard.get(squareLoc);
+        for (Entity entity : gameBoard) {
+            if (entity instanceof Alien) {
+                Alien alien = (Alien) entity;
                 shooting = true;
-                if (projectile.getLocation().equals(alien)) {
-                    alien.setEntity(Square.Entity.Empty);
-                    Alien deadAlien = aliens.get(i);
-                    deadAlien.setAlive(false);
-                    aliens.remove(i);
+                if (projectile.getRow() == alien.getRow() && projectile.getCol() == alien.getCol()) {
+                    alien.setAlive(false);
                     dead = true;
+                    deadAliens++;
                     score += 10;
                     break;
-
                 }
             }
         }
         return dead;
-    }*/
+    }
 
+
+
+
+    private void paintShot(Graphics2D g) {
+        g.setColor(Color.GREEN);
+        g.drawLine((shooter.getCol() * cellSize) + cellSize / 2,
+                (shooter.getRow() * cellSize) + cellSize / 2,
+                (projectile.getCol() * cellSize) + cellSize / 2,
+                (projectile.getRow() * cellSize) + cellSize / 2);
+        sleep();
+
+    }
+
+    public void shoot() {
+        for (int loc = BOARD_ROWS - 1; loc >= 0; loc--) {
+            projectile = new Projectile(shooter.getCol(), loc);
+            if (removeAlienIfShot()) {
+                if (isGameOver()) {
+                    exit();
+                }
+                break;
+            }
+        }
+    }
+
+    public boolean isGameOver() {
+        return allAliensDead() || gameOver;
+    }
+
+    private boolean allAliensDead() {
+        return allAliens == deadAliens;
+    }
+
+    private void sleep() {
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /*public void nextRound() {
+        Square square;
+        for (int i = 0; i < gameBoard.size(); i++) {
+            square = gameBoard.get(i);
+            square.setCol(square.getCol() + 1);
+            int row = aliens.get(i).getRow();
+            aliens.get(i).setRow(row + 1);
+            if (square.getRow() == BOARD_ROWS - 2 && square.getEntity() == Square.Entity.Alien) {
+                gameOver = true;
+            }
+        }
+
+    }*/
 
     private int getSquareIndex(int row, int col) {
         for (int i = 0; i < gameBoard.size(); i++) {
@@ -165,7 +214,6 @@ class GameBoard {
         }
         return -1;
     }
-
 
     private Image createAlienPic() {
         File imageFile = new File("alien.jpg");
@@ -195,57 +243,4 @@ class GameBoard {
         g2d.dispose();
         return resized;
     }
-
-/*    private void paintShot(Graphics2D g) {
-        g.setColor(Color.GREEN);
-        g.drawLine((shooter.getLocation().getCol() * cellSize) + cellSize / 2,
-                (shooter.getLocation().getRow() * cellSize) + cellSize / 2,
-                (projectile.getLocation().getRow() * cellSize) + cellSize / 2,
-                (projectile.getLocation().getCol() * cellSize) + cellSize / 2);
-        sleep();
-
-    }*/
-
- /*   public void shoot() {
-        for (int loc = BOARD_ROWS - 1; loc >= 0; loc--) {
-            Square current = new Square(Square.Entity.Projectile, shooter.getLocation().getCol(), loc);
-            projectile = new Projectile(current);
-
-            if (removeAlienIfShot()) {
-
-                if (isGameOver()) {
-                    exit();
-                }
-                break;
-            }
-        }
-
-    }*/
-
-
-/*    public boolean isGameOver() {
-        return aliens.isEmpty() || gameOver;
-    }*/
-
-    private void sleep() {
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    /*public void nextRound() {
-        Square square;
-        for (int i = 0; i < gameBoard.size(); i++) {
-            square = gameBoard.get(i);
-            square.setCol(square.getCol() + 1);
-            int row = aliens.get(i).getRow();
-            aliens.get(i).setRow(row + 1);
-            if (square.getRow() == BOARD_ROWS - 2 && square.getEntity() == Square.Entity.Alien) {
-                gameOver = true;
-            }
-        }
-
-    }*/
 }

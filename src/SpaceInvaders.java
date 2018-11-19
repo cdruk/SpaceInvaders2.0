@@ -27,7 +27,7 @@ public class SpaceInvaders extends JFrame {
         int canvasHeight = SQUARE_SIZE * gameBoard.BOARD_ROWS;
         engine.setPreferredSize(new Dimension(canvasWidth, canvasHeight));
 
-       // addKeyListener(new MyKeyAdapter());
+        addKeyListener(new MyKeyAdapter());
 
         cp.add(engine);
 
@@ -91,27 +91,19 @@ public class SpaceInvaders extends JFrame {
                     elapsedTime--;
                 }
 
-                ActionListener refresher = new ActionListener()
-                {
-                    @Override
-                    public void actionPerformed(ActionEvent e)
-                    {
-                        //gameBoard.nextRound();
-                        repaint();
-                    }
+                ActionListener refresher = e -> {
+                    //gameBoard.nextRound();
+                    repaint();
                 };
 
                 new Timer(15000, refresher).start();
-//                ActionListener listener = new ActionListener() {
-//                    @Override
-//                    public void actionPerformed(ActionEvent e) {
-//
-//                        gameBoard.nextRound();
-//                    }
-//                };
-//                Timer timer = new Timer(15000, listener);
-//                timer.setRepeats(true);
-//                timer.start();
+                ActionListener listener = e -> {
+
+                    //gameBoard.nextRound();
+                };
+                Timer timer = new Timer(15000, listener);
+                timer.setRepeats(true);
+                timer.start();
 
                 sleep();
                 repaint();
@@ -131,7 +123,7 @@ public class SpaceInvaders extends JFrame {
         }
     }
 
-/*    private class MyKeyAdapter extends KeyAdapter {
+   private class MyKeyAdapter extends KeyAdapter {
 
         @Override
         public void keyPressed(KeyEvent keyEvent) {
@@ -141,18 +133,19 @@ public class SpaceInvaders extends JFrame {
                 engine.running = true;
             }
 
-            if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
-                engine.gameBoard.movement = Direction.LEFT;
-                engine.gameBoard.moveShooter();
-            } else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
-                engine.gameBoard.movement = Direction.RIGHT;
-                engine.gameBoard.moveShooter();
-            } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+//            if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
+//                engine.gameBoard.movement = Direction.LEFT;
+//                engine.gameBoard.moveShooter();
+//            } else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
+//                engine.gameBoard.movement = Direction.RIGHT;
+//                engine.gameBoard.moveShooter();
+//            } else
+        if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
                 engine.gameBoard.shoot();
             }
 
         }
-    }*/
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(SpaceInvaders::new);

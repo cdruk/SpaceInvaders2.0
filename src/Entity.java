@@ -19,5 +19,4 @@ public abstract class Entity {
     public void setCol(int col) {
         this.col = col;
     }
-
 }
