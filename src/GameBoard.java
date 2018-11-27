@@ -67,18 +67,17 @@ class GameBoard
 	{
 		for (int i = gameBoard.size() - 1; i > -1; i--)
 		{
-			for (int column = 0; column < BOARD_COLS; column++)
-			{
-				for (int row = 0; row < BOARD_ROWS; row++)
-				{
+
 					Entity entity = gameBoard.get(i);
-					if (entity instanceof Alien && entity.getCol() == BOARD_COLS - 6)
+					Entity rightNeighbor = null;
+					if (!atRightBounds(entity)){
+                    rightNeighbor = gameBoard.get(getSquareIndex(entity.getCol() + 1, entity.getRow()));}
+                if (entity.getClass() == Alien.class && rightNeighbor.getClass() == Empty.class)
 					{
 						entity.setCol(entity.getCol() + 1);
 					}
 				}
-			}
-		}
+
 	}
 
 
@@ -135,14 +134,14 @@ class GameBoard
 		Entity empty = new Empty(shooter.getCol(), shooter.getRow());
 		int newLoc;
 
-		if (movement == Direction.LEFT && !atLeftBounds())
+		if (movement == Direction.LEFT && !atLeftBounds(shooter))
 		{
 			newLoc = getSquareIndex(shooter.getCol() - 1, shooter.getRow());
 			gameBoard.set(newLoc, shooter);
 			shooter.setCol(shooter.getCol() - 1);
 			gameBoard.set(oldLoc, empty);
 		}
-		else if (movement == Direction.RIGHT && !atRightBounds())
+		else if (movement == Direction.RIGHT && !atRightBounds(shooter))
 		{
 			newLoc = getSquareIndex(shooter.getCol() + 1, shooter.getRow());
 			gameBoard.set(newLoc, shooter);
@@ -153,14 +152,14 @@ class GameBoard
 //        projectile = new Projectile(shot);
 	}
 
-	private boolean atLeftBounds()
+	private boolean atLeftBounds(Entity entity)
 	{
-		return shooter.getCol() == 0;
+		return entity.getCol() == 0;
 	}
 
-	private boolean atRightBounds()
+	private boolean atRightBounds(Entity entity)
 	{
-		return shooter.getCol() == BOARD_COLS - 1;
+		return entity.getCol() == BOARD_COLS - 1;
 	}
 
 
