@@ -72,7 +72,7 @@ class GameBoard
 				for (int row = 0; row < BOARD_ROWS; row++)
 				{
 					Entity entity = gameBoard.get(i);
-					if (entity instanceof Alien && entity.getCol() == BOARD_COLS - 6)
+					if (entity.getClass() == Alien.class && entity.getCol() == BOARD_COLS - 6)
 					{
 						entity.setCol(entity.getCol() + 1);
 					}
@@ -97,11 +97,11 @@ class GameBoard
 		//paintGameboard(g); maybe have each square paint itself?
 		for (Entity entity : gameBoard)
 		{
-			if (entity instanceof Alien)
+			if (entity.getClass() == Alien.class)
 			{
 				paintAliens(g, entity);
 			}
-			else if (entity instanceof Shooter)
+			else if (entity.getClass() == Shooter.class)
 			{
 				paintShooter(g);
 			}
@@ -180,7 +180,7 @@ class GameBoard
 	{
 		for (Entity entity : gameBoard)
 		{
-			if (entity instanceof Alien)
+			if (entity.getClass() == Alien.class)
 			{
 				Alien alien = (Alien) entity;
 				shooting = true;
