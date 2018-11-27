@@ -3,7 +3,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-class Shooter  extends Entity{
+class Shooter extends Entity{
     private boolean exists;
 
     public Shooter(int col, int row) {

@@ -36,9 +36,9 @@ class GameBoard {
     }
 
     private void generateGameBoard() {
-        for (int row = 0; row < BOARD_ROWS; row++) {
-            for (int col = 0; col < BOARD_COLS; col++) {
-                Entity entity = new Empty(row, col);
+        for (int col = 0; col < BOARD_COLS; col++) {
+            for (int row = 0; row < BOARD_ROWS; row++) {
+                Entity entity = new Empty(col, row);
                 gameBoard.add(entity);
             }
         }
@@ -94,26 +94,33 @@ class GameBoard {
     }
 
    public void moveShooter() {
+        int oldLoc = getSquareIndex(shooter.getCol(),shooter.getRow());
+        Entity empty = new Empty(shooter.getCol(),shooter.getRow());
         int newLoc;
-        boolean[] bounds = checkBounds();
-        if (movement == Direction.LEFT && !bounds[0]) {
+
+        if (movement == Direction.LEFT && !atLeftBounds()) {
             newLoc = getSquareIndex(shooter.getCol() - 1, shooter.getRow());
             gameBoard.set(newLoc, shooter);
-        } else if (movement == Direction.RIGHT && !bounds[1]) {
+            shooter.setCol(shooter.getCol()-1);
+            gameBoard.set(oldLoc, empty);
+        } else if (movement == Direction.RIGHT && !atRightBounds()) {
             newLoc = getSquareIndex(shooter.getCol() + 1, shooter.getRow());
             gameBoard.set(newLoc, shooter);
+            shooter.setCol(shooter.getCol()+1);
+            gameBoard.set(oldLoc, empty);
         }
 //        Square shot = new Square(Square.Entity.Projectile, shooter.getLocation().getCol(), shooter.getLocation().getRow());
 //        projectile = new Projectile(shot);
     }
 
-
-    private boolean[] checkBounds() {
-        boolean tooFarLeft = shooter.getCol() == 0;
-        boolean tooFarRight = shooter.getCol() == BOARD_COLS - 1;
-        boolean[] bounds = {tooFarLeft, tooFarRight};
-        return bounds;
+    private boolean atLeftBounds() {
+        return shooter.getCol() == 0;
     }
+
+    private boolean atRightBounds() {
+        return shooter.getCol() == BOARD_COLS - 1;
+    }
+
 
 
     private void exit() {
