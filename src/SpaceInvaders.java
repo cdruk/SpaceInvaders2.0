@@ -28,6 +28,7 @@ public class SpaceInvaders extends JFrame {
        alienDir = Direction.RIGHT;
         ActionListener moveListener = e -> {
             alienDir = gameBoard.moveAliens(alienDir);
+            repaint();
         };
         Timer timer = new Timer(1000, moveListener);
         timer.setRepeats(true);

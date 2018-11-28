@@ -10,7 +10,7 @@ import java.util.HashSet;
 class GameBoard extends JComponent {
     protected int cellSize;
     private Shooter shooter;
-    private Entity projectile;
+    private Projectile projectile;
     private int score = 0;
     private ArrayList<Alien> aliens;
 
@@ -39,7 +39,7 @@ class GameBoard extends JComponent {
         generateShooter();
     }
 
-    GameBoard(){
+    GameBoard() {
         gameBoard = new Entity[BOARD_COLS][BOARD_ROWS];
         generateGameBoard();
         generateAliens();
@@ -67,48 +67,66 @@ class GameBoard extends JComponent {
         }
     }
 
-    public Direction moveAliens(Direction dir) {
+    Direction moveAliens(Direction dir) {
         Direction newDir = dir;
         HashSet<Integer> columns = new HashSet<>();
-        ArrayList<Alien> old = aliens;
-        for (int i = 0; i < aliens.size(); i++) {
-            columns.add(aliens.get(i).getCol());
+        Entity[][] oldGrid = gameBoard;
+        for (Alien alien : aliens) {
+            columns.add(alien.getCol());
         }
-        if (dir == Direction.LEFT) {
-            if (!columns.contains(0)) {
-                for (int j = 0; j < aliens.size(); j++) {
-                    int currentCol = old.get(j).getCol();
-                    int currentRow = old.get(j).getRow();
-                    aliens.get(j).setCol(currentCol - 1);
-                    gameBoard[currentCol - 1][currentRow] = aliens.get(j);
-                    gameBoard[currentCol][currentRow] = new Empty(currentCol, currentRow);
+        Entity[][] newGrid = new Entity[BOARD_COLS][BOARD_ROWS];
+        for (int i = 0; i < BOARD_ROWS; i++) {
+            for (int j = 0; j < BOARD_COLS; j++) {
+                Entity current = oldGrid[j][i];
+                if (current instanceof Alien) {
+                if (dir == Direction.LEFT) {
+                    if (!columns.contains(0)) {
+                            int currentCol = current.getCol();
+                            int currentRow = current.getRow();
+                            Alien alien = new Alien(current.getCol() - 1, current.getRow());
+                            newGrid[currentCol - 1][currentRow] = alien;
+                            newGrid[currentCol][currentRow] = new Empty(currentCol, currentRow);
+                        }
+
+                    if (columns.contains(1)) {
+                        newDir = Direction.RIGHT;
+                    }
+                } else {
+                        if (!columns.contains(BOARD_COLS - 1)) {
+                            Alien alien = new Alien(current.getCol() + 1, current.getRow());
+                            int currentCol = current.getCol();
+                            int currentRow = current.getRow();
+                            newGrid[currentCol + 1][currentRow] = alien;
+                            newGrid[currentCol][currentRow] = new Empty(currentCol, currentRow);
+
+                    } else {
+                            Alien alien = new Alien(current.getCol(), current.getRow() + 1);
+                            int currentRow = current.getRow();
+                            int currentCol = current.getCol();
+                            newGrid[currentCol][currentRow + 1] = alien;
+                            newGrid[currentCol][currentRow] = new Empty(currentCol, currentRow);
+                            newDir = Direction.LEFT;
+                        }
+                    }
+
                 }
-                if(columns.contains(1)){
-                    newDir = Direction.RIGHT;
+                else if(current instanceof Empty){
+                    Empty emp = new Empty(current.getCol(), current.getRow());
+                    newGrid[j][i] = emp;
+                }else if(current instanceof Projectile){
+                    Projectile proj = new Projectile(current.getCol(), current.getRow());
+                    newGrid[j][i] = proj;
+                }else if(current instanceof Shooter){
+                    Shooter shoot = new Shooter(current.getCol(), current.getRow());
+                    newGrid[i][j] = shoot;
                 }
             }
-        } else {
-            if (!columns.contains(BOARD_COLS - 1)) {
-                for (int k = 0; k < aliens.size(); k++) {
-                    int currentCol = old.get(k).getCol();
-                    int currentRow = old.get(k).getRow();
-                    aliens.get(k).setCol(currentCol + 1);
-                    gameBoard[currentCol + 1][currentRow] = aliens.get(k);
-                    gameBoard[currentCol][currentRow] = new Empty(currentCol, currentRow);
-                }
-            } else {
-                for (int l = 0; l < aliens.size(); l++) {
-                    int currentRow = old.get(l).getRow();
-                    int currentCol = old.get(l).getCol();
-                    aliens.get(l).setRow(currentRow + 1);
-                    gameBoard[currentCol][currentRow + 1] = aliens.get(l);
-                    gameBoard[currentCol][currentRow] = new Empty(currentCol, currentRow);
-                    newDir = Direction.LEFT;
-                }
-            }
+            this.gameBoard = newGrid;
+
         }
-        return  newDir;
+        return newDir;
     }
+
 
     private void generateShooter() {
         shooter = new Shooter((BOARD_COLS - 1) / 2, BOARD_ROWS - 1);
@@ -147,7 +165,7 @@ class GameBoard extends JComponent {
 
     }
 
-    public void moveShooter() {
+    void moveShooter() {
         Entity empty = new Empty(shooter.getCol(), shooter.getRow());
         if (movement == Direction.LEFT && !atLeftBounds()) {
             gameBoard[shooter.getCol()][shooter.getRow()] = empty;
@@ -215,7 +233,7 @@ class GameBoard extends JComponent {
 
     }
 
-    public void shoot() {
+    void shoot() {
         for (int loc = BOARD_ROWS - 1; loc >= 0; loc--) {
             projectile = new Projectile(shooter.getCol(), loc);
             if (removeAlienIfShot()) {
@@ -227,11 +245,11 @@ class GameBoard extends JComponent {
         }
     }
 
-    public boolean isGameOver() {
+    private boolean isGameOver() {
         HashSet<Integer> rows = new HashSet<>();
         boolean over = false;
-        for (int i = 0; i < aliens.size(); i++) {
-            rows.add(aliens.get(i).getRow());
+        for (Alien alien : aliens) {
+            rows.add(alien.getRow());
         }
         if (rows.contains(BOARD_ROWS - 1) || allAliensDead()) {
             over = true;
@@ -281,7 +299,11 @@ class GameBoard extends JComponent {
         return resized;
     }
 
-    public Shooter getShooter() {
+    Shooter getShooter() {
         return shooter;
+    }
+
+    ArrayList<Alien> getAliens() {
+        return aliens;
     }
 }
