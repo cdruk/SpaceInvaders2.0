@@ -203,7 +203,7 @@ class GameBoard extends JComponent {
     }
 
 
-    private void exit() {
+    void exit() {
         System.out.println("Final Score: " + getScore());
         System.exit(0);
     }
@@ -258,13 +258,13 @@ class GameBoard extends JComponent {
         }
     }
 
-    private boolean isGameOver() {
+    boolean isGameOver() {
         HashSet<Integer> rows = new HashSet<>();
         boolean over = false;
         for (Alien alien : aliens) {
             rows.add(alien.getRow());
         }
-        if (rows.contains(BOARD_ROWS - 1) || allAliensDead()) {
+        if (rows.contains(BOARD_ROWS - 2) || allAliensDead()) {
             over = true;
         }
         return over;
