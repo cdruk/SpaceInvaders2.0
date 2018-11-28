@@ -1,13 +1,13 @@
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-class GameBoard {
+class GameBoard extends JComponent {
     protected int cellSize;
     private Entity shooter;
     private Entity projectile;
@@ -26,10 +26,9 @@ class GameBoard {
 
     GameBoard(int cellSize) {
         this.cellSize = cellSize;
-
         alienPic = createAlienPic();
         shooterPic = createShooterPic();
-        gameBoard = new ArrayList<Entity>();
+        gameBoard = new ArrayList<>();
         generateGameBoard();
         generateAliens();
         generateShooter();
@@ -46,7 +45,7 @@ class GameBoard {
 
     private void generateAliens() {
         aliens = new ArrayList<>();
-        for (int col = 2; col < BOARD_COLS - 5; col++) {
+        for (int col = 2; col < BOARD_COLS - 3; col++) {
             for (int row = 0; row < 5; row++) {
                 int i = getSquareIndex(col, row);
                 Alien alien = new Alien(col, row);
@@ -88,9 +87,10 @@ class GameBoard {
         gameBoard.set(getSquareIndex(shooter.getCol(), shooter.getRow()), shooter);
     }
 
-    void paint(Graphics graphics) {
-
+    @Override
+    public void paintComponent(Graphics graphics) {
         g = (Graphics2D) graphics;
+        g.setColor(Color.black);
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         for (Entity entity : gameBoard) {
@@ -98,6 +98,8 @@ class GameBoard {
                 paintAliens(g, entity);
             } else if (entity instanceof Shooter) {
                 paintShooter(g);
+            }else if(entity instanceof Empty){
+                g.fillRect(entity.getCol() * cellSize, entity.getRow() * cellSize, cellSize, cellSize);
             }
         }
         if (shooting) {
@@ -132,6 +134,8 @@ class GameBoard {
             shooter.setCol(shooter.getCol()+1);
             gameBoard.set(oldLoc, empty);
         }
+
+        repaint();
     }
 
     private boolean atLeftBounds() {
