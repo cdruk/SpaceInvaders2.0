@@ -53,7 +53,8 @@ public class SpaceInvaders extends JFrame {
                 gameBoard.moveShooter();
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
                 gameBoard.shoot();
-                gameBoard.repaint();
+                repaint();
+                setTitle("Space Invaders - Score: " + gameBoard.getScore());
             }
 
         }
