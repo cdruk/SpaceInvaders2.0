@@ -5,6 +5,7 @@ import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 class GameBoard {
     protected int cellSize;
@@ -12,7 +13,7 @@ class GameBoard {
     private Entity projectile;
     private int score = 0;
     private ArrayList<Entity> gameBoard;
-    private ImageObserver imgObs;
+    private ArrayList<Alien> aliens;
     public final int BOARD_ROWS = 12;
     public final int BOARD_COLS = 15;
     public Direction movement;
@@ -20,7 +21,6 @@ class GameBoard {
     public boolean shooting;
     private Image alienPic;
     private Image shooterPic;
-    private boolean gameOver;
     private int allAliens;
     private int deadAliens;
 
@@ -36,21 +36,49 @@ class GameBoard {
     }
 
     private void generateGameBoard() {
-        for (int row = 0; row < BOARD_ROWS; row++) {
-            for (int col = 0; col < BOARD_COLS; col++) {
-                Entity entity = new Empty(row, col);
+        for (int col = 0; col < BOARD_COLS; col++) {
+            for (int row = 0; row < BOARD_ROWS; row++) {
+                Entity entity = new Empty(col, row);
                 gameBoard.add(entity);
             }
         }
     }
 
     private void generateAliens() {
-        for (int col = 0; col < BOARD_COLS - 5; col++) {
+        aliens = new ArrayList<>();
+        for (int col = 2; col < BOARD_COLS - 5; col++) {
             for (int row = 0; row < 5; row++) {
                 int i = getSquareIndex(col, row);
-                Entity alien = new Alien(col, row);
+                Alien alien = new Alien(col, row);
+                aliens.add(alien);
                 gameBoard.set(i, alien);
                 allAliens++;
+            }
+        }
+    }
+
+    public void moveAliens(Direction dir){
+        HashSet<Integer> columns = new HashSet<>();
+        for(int i = 0; i < aliens.size(); i++){
+            columns.add(aliens.get(i).getCol());
+        }
+        if(dir == Direction.LEFT){
+            if(!columns.contains(BOARD_COLS)) {
+                for (int j = 0; j < aliens.size(); j++) {
+                    int current = aliens.get(j).getCol();
+                    aliens.get(j).setCol(current + 1);
+                }
+            }else{
+                for(int l = 0; l < aliens.size(); l++){
+                    int current = aliens.get(l).getRow();
+                    aliens.get(l).setRow(current + 1);
+                }
+            }
+        }
+        if(!columns.contains(0) && dir == Direction.RIGHT){
+            for(int k = 0; k < aliens.size(); k++){
+                int current = aliens.get(k).getCol();
+                aliens.get(k).setCol(current - 1);
             }
         }
     }
@@ -65,7 +93,6 @@ class GameBoard {
         g = (Graphics2D) graphics;
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        //paintGameboard(g); maybe have each square paint itself?
         for (Entity entity : gameBoard) {
             if (entity instanceof Alien) {
                 paintAliens(g, entity);
@@ -73,47 +100,48 @@ class GameBoard {
                 paintShooter(g);
             }
         }
-//        paintAliens(g);
-//        paintShooter(g);
         if (shooting) {
             paintShot(g);
         }
     }
 
     private void paintAliens(Graphics2D g, Entity alien) {
+        g.drawImage(alienPic, alien.getCol() * cellSize, alien.getRow() * cellSize, null);
 
-//        if (isAlive()) {
-        g.drawImage(alienPic, alien.getCol() * cellSize, alien.getRow() * cellSize, imgObs);
-//        }
-    }
+}
 
 
     private void paintShooter(Graphics2D g) {
-        g.drawImage(shooterPic, shooter.getCol() * cellSize, shooter.getRow() * cellSize, imgObs);
+        g.drawImage(shooterPic, shooter.getCol() * cellSize, shooter.getRow() * cellSize, null);
 
     }
 
-   public void moveShooter() {
+    public void moveShooter() {
+        int oldLoc = getSquareIndex(shooter.getCol(),shooter.getRow());
+        Entity empty = new Empty(shooter.getCol(),shooter.getRow());
         int newLoc;
-        boolean[] bounds = checkBounds();
-        if (movement == Direction.LEFT && !bounds[0]) {
+
+        if (movement == Direction.LEFT && !atLeftBounds()) {
             newLoc = getSquareIndex(shooter.getCol() - 1, shooter.getRow());
             gameBoard.set(newLoc, shooter);
-        } else if (movement == Direction.RIGHT && !bounds[1]) {
+            shooter.setCol(shooter.getCol()-1);
+            gameBoard.set(oldLoc, empty);
+        } else if (movement == Direction.RIGHT && !atRightBounds()) {
             newLoc = getSquareIndex(shooter.getCol() + 1, shooter.getRow());
             gameBoard.set(newLoc, shooter);
+            shooter.setCol(shooter.getCol()+1);
+            gameBoard.set(oldLoc, empty);
         }
-//        Square shot = new Square(Square.Entity.Projectile, shooter.getLocation().getCol(), shooter.getLocation().getRow());
-//        projectile = new Projectile(shot);
     }
 
-
-    private boolean[] checkBounds() {
-        boolean tooFarLeft = shooter.getCol() == 0;
-        boolean tooFarRight = shooter.getCol() == BOARD_COLS - 1;
-        boolean[] bounds = {tooFarLeft, tooFarRight};
-        return bounds;
+    private boolean atLeftBounds() {
+        return shooter.getCol() == 0;
     }
+
+    private boolean atRightBounds() {
+        return shooter.getCol() == BOARD_COLS - 1;
+    }
+
 
 
     private void exit() {
@@ -134,6 +162,7 @@ class GameBoard {
                 if (projectile.getCol() == alien.getCol() && projectile.getRow() == alien.getRow()) {
                     alien.setAlive(false);
                     deadAliens++;
+                    aliens.remove(alien);
                     score += 10;
                     int i = getSquareIndex(projectile.getCol(), projectile.getRow());
                     gameBoard.set(i, new Empty(projectile.getCol(), projectile.getRow()));
@@ -170,7 +199,15 @@ class GameBoard {
     }
 
     public boolean isGameOver() {
-        return allAliensDead() || gameOver;
+        HashSet<Integer> rows = new HashSet<>();
+        boolean over = false;
+        for(int i = 0; i < aliens.size(); i++){
+            rows.add(aliens.get(i).getRow());
+        }
+        if(rows.contains(BOARD_ROWS - 1) || allAliensDead()){
+           over = true;
+        }
+        return over;
     }
 
     private boolean allAliensDead() {
@@ -185,19 +222,7 @@ class GameBoard {
         }
     }
 
-    /*public void nextRound() {
-        Square square;
-        for (int i = 0; i < gameBoard.size(); i++) {
-            square = gameBoard.get(i);
-            square.setCol(square.getCol() + 1);
-            int row = aliens.get(i).getRow();
-            aliens.get(i).setRow(row + 1);
-            if (square.getRow() == BOARD_ROWS - 2 && square.getEntity() == Square.Entity.Alien) {
-                gameOver = true;
-            }
-        }
 
-    }*/
 
     private int getSquareIndex(int col, int row) {
         for (int i = 0; i < gameBoard.size(); i++) {

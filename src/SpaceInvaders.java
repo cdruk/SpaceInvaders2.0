@@ -57,6 +57,7 @@ public class SpaceInvaders extends JFrame {
         private GameBoard gameBoard;
         private boolean running = false;
 
+        Direction alienDir = Direction.LEFT;
         private Engine(GameBoard gameBoard) {
             this.gameBoard = gameBoard;
         }
@@ -78,7 +79,6 @@ public class SpaceInvaders extends JFrame {
             double elapsedTime = 0.0;
 
             double FPS = 15.0;
-
             // Game loop.
             while (true) {
 
@@ -92,14 +92,19 @@ public class SpaceInvaders extends JFrame {
                 }
 
                 ActionListener refresher = e -> {
-                    //gameBoard.nextRound();
                     repaint();
                 };
 
                 new Timer(15000, refresher).start();
-                ActionListener listener = e -> {
 
-                    //gameBoard.nextRound();
+                ActionListener listener = e -> {
+                    gameBoard.moveAliens(alienDir);
+                    if(alienDir == Direction.LEFT){
+                        alienDir = Direction.RIGHT;
+                    }else{
+                        alienDir = Direction.LEFT;
+                    }
+                    repaint();
                 };
                 Timer timer = new Timer(15000, listener);
                 timer.setRepeats(true);
@@ -123,7 +128,7 @@ public class SpaceInvaders extends JFrame {
         }
     }
 
-   private class MyKeyAdapter extends KeyAdapter {
+    private class MyKeyAdapter extends KeyAdapter {
 
         @Override
         public void keyPressed(KeyEvent keyEvent) {
