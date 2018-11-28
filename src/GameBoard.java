@@ -76,8 +76,8 @@ class GameBoard extends JComponent {
 
         Entity[][] oldGrid = gameBoard;
         Entity[][] newGrid = new Entity[BOARD_COLS][BOARD_ROWS];
-        for (int col = 0; col < BOARD_COLS; col++) {
-            for (int row = 0; row < BOARD_ROWS; row++) {
+        for (int row = 0; row < BOARD_ROWS; row++) {
+            for (int col = 0; col < BOARD_COLS; col++) {
                 Empty empty = new Empty(col, row);
                 newGrid[col][row] = empty;
             }
@@ -131,13 +131,13 @@ class GameBoard extends JComponent {
     }
 
     private int getAlienInt(int currentCol, int currentRow) {
-        int i = 0;
-        for(i = 0; i < aliens.size(); i++){
+        int index = 0;
+        for(int i = 0; i < aliens.size(); i++){
             if(aliens.get(i).getCol() == currentCol && aliens.get(i).getRow() == currentRow) {
-                return i;
+                index = i;
             }
         }
-        return i;
+        return index;
     }
 
 
