@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -14,14 +15,23 @@ public class SpaceInvaders extends JFrame {
     private SpaceInvaders() {
         gameBoard = new GameBoard(SQUARE_SIZE);
         gameBoard.setBackground(Color.black);
-        alienDir = Direction.LEFT;
         int canvasWidth = SQUARE_SIZE * gameBoard.BOARD_COLS;
         int canvasHeight = SQUARE_SIZE * gameBoard.BOARD_ROWS;
         setWindowProperties(canvasWidth, canvasHeight + 10 );
         JComponent mainPanel = gameBoard;
         add(mainPanel);
         addKeyListener(new MyKeyAdapter());
+        runGame();
+    }
 
+    private void runGame() {
+       alienDir = Direction.RIGHT;
+        ActionListener moveListener = e -> {
+            alienDir = gameBoard.moveAliens(alienDir);
+        };
+        Timer timer = new Timer(1000, moveListener);
+        timer.setRepeats(true);
+        timer.start();
     }
 
 
