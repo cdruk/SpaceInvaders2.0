@@ -170,6 +170,7 @@ class GameBoard extends JComponent {
                     score += 10;
                     int i = getSquareIndex(projectile.getCol(), projectile.getRow());
                     gameBoard.set(i, new Empty(projectile.getCol(), projectile.getRow()));
+                    repaint();
                     return true;
                 }
             }

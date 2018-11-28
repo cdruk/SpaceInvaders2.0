@@ -21,24 +21,9 @@ public class SpaceInvaders extends JFrame {
         JComponent mainPanel = gameBoard;
         add(mainPanel);
         addKeyListener(new MyKeyAdapter());
-        runGame();
 
     }
 
-    private void runGame() {
-        ActionListener listener = e -> {
-/*            gameBoard.moveAliens(alienDir);
-            if(alienDir == Direction.LEFT){
-                alienDir = Direction.RIGHT;
-            }else{
-                alienDir = Direction.LEFT;
-            }*/
-            repaint();
-        };
-        Timer timer = new Timer(10, listener);
-        timer.setRepeats(true);
-        timer.start();
-    }
 
     @Override
     public void paint(Graphics g){
@@ -68,6 +53,7 @@ public class SpaceInvaders extends JFrame {
                 gameBoard.moveShooter();
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
                 gameBoard.shoot();
+                gameBoard.repaint();
             }
 
         }
