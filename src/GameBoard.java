@@ -70,11 +70,18 @@ class GameBoard extends JComponent {
     Direction moveAliens(Direction dir) {
         Direction newDir = dir;
         HashSet<Integer> columns = new HashSet<>();
-        Entity[][] oldGrid = gameBoard;
         for (Alien alien : aliens) {
             columns.add(alien.getCol());
         }
+
+        Entity[][] oldGrid = gameBoard;
         Entity[][] newGrid = new Entity[BOARD_COLS][BOARD_ROWS];
+        for (int col = 0; col < BOARD_COLS; col++) {
+            for (int row = 0; row < BOARD_ROWS; row++) {
+                Empty empty = new Empty(col, row);
+                newGrid[col][row] = empty;
+            }
+        }
         for (int i = 0; i < BOARD_ROWS; i++) {
             for (int j = 0; j < BOARD_COLS; j++) {
                 Entity current = oldGrid[j][i];
@@ -83,9 +90,9 @@ class GameBoard extends JComponent {
                     if (!columns.contains(0)) {
                             int currentCol = current.getCol();
                             int currentRow = current.getRow();
-                            Alien alien = new Alien(current.getCol() - 1, current.getRow());
-                            newGrid[currentCol - 1][currentRow] = alien;
-                            newGrid[currentCol][currentRow] = new Empty(currentCol, currentRow);
+                            int index = getAlienInt(currentCol, currentRow);
+                            aliens.get(index).setCol(currentCol -1);
+                            newGrid[currentCol - 1][currentRow] = aliens.get(index);
                         }
 
                     if (columns.contains(1)) {
@@ -93,38 +100,44 @@ class GameBoard extends JComponent {
                     }
                 } else {
                         if (!columns.contains(BOARD_COLS - 1)) {
-                            Alien alien = new Alien(current.getCol() + 1, current.getRow());
                             int currentCol = current.getCol();
                             int currentRow = current.getRow();
-                            newGrid[currentCol + 1][currentRow] = alien;
-                            newGrid[currentCol][currentRow] = new Empty(currentCol, currentRow);
+                            int index = getAlienInt(currentCol, currentRow);
+                            aliens.get(index).setCol(currentCol + 1);
+                            newGrid[currentCol + 1][currentRow] = aliens.get(index);
 
                     } else {
-                            Alien alien = new Alien(current.getCol(), current.getRow() + 1);
                             int currentRow = current.getRow();
                             int currentCol = current.getCol();
-                            newGrid[currentCol][currentRow + 1] = alien;
-                            newGrid[currentCol][currentRow] = new Empty(currentCol, currentRow);
+                            int index = getAlienInt(currentCol, currentRow);
+                            aliens.get(index).setRow(currentRow + 1);
+                            newGrid[currentCol][currentRow + 1] = aliens.get(index);
                             newDir = Direction.LEFT;
                         }
                     }
 
-                }
-                else if(current instanceof Empty){
-                    Empty emp = new Empty(current.getCol(), current.getRow());
-                    newGrid[j][i] = emp;
                 }else if(current instanceof Projectile){
                     Projectile proj = new Projectile(current.getCol(), current.getRow());
                     newGrid[j][i] = proj;
                 }else if(current instanceof Shooter){
                     Shooter shoot = new Shooter(current.getCol(), current.getRow());
-                    newGrid[i][j] = shoot;
+                    newGrid[j][i] = shoot;
                 }
             }
             this.gameBoard = newGrid;
 
         }
         return newDir;
+    }
+
+    private int getAlienInt(int currentCol, int currentRow) {
+        int i = 0;
+        for(i = 0; i < aliens.size(); i++){
+            if(aliens.get(i).getCol() == currentCol && aliens.get(i).getRow() == currentRow) {
+                return i;
+            }
+        }
+        return i;
     }
 
 
