@@ -4,19 +4,18 @@ import java.io.File;
 import java.io.IOException;
 
 class Shooter extends Entity{
-    private boolean exists;
+    private int lives = 3;
 
     public Shooter(int col, int row) {
         setCol(col);
         setRow(row);
     }
 
-    public boolean isExists() {
-        return exists;
+    public int getLives() {
+        return lives;
     }
 
-    public void setExists(boolean exists) {
-        this.exists = exists;
+    public void setLives(int lives) {
+        this.lives = lives;
     }
-
 }
