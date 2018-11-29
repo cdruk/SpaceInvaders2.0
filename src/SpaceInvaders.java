@@ -13,6 +13,7 @@ public class SpaceInvaders extends JFrame {
     private static final int SQUARE_SIZE = 40;
     GameBoard gameBoard;
     Direction alienDir;
+    String title;
 
     private SpaceInvaders() {
         gameBoard = new GameBoard(SQUARE_SIZE);
@@ -21,6 +22,7 @@ public class SpaceInvaders extends JFrame {
         int canvasHeight = SQUARE_SIZE * gameBoard.BOARD_ROWS;
         setWindowProperties(canvasWidth, canvasHeight + 10);
         JComponent mainPanel = gameBoard;
+        title = "Space Invaders - Score: " + gameBoard.getScore() + "               Lives: " + gameBoard.getShooter().getLives();
         add(mainPanel);
         addKeyListener(new MyKeyAdapter());
         runGame();
@@ -40,14 +42,12 @@ public class SpaceInvaders extends JFrame {
     }
 
     private void startWar() {
-        ActionListener warOneListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gameBoard.war();
-                setTitle("Space Invaders - Score: " + gameBoard.getScore() + "          -Lives: " + gameBoard.getShooter().getLives());
-            }
+
+        ActionListener warListener = e -> {
+            gameBoard.war();
+            setTitle(title);
         };
-        Timer warTimerOne = new Timer(1000, warOneListener);
+        Timer warTimerOne = new Timer(1000, warListener);
         warTimerOne.setRepeats(true);
         warTimerOne.start();
     }
@@ -60,7 +60,7 @@ public class SpaceInvaders extends JFrame {
 
     private void setWindowProperties(int width, int height) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Space Invaders - Score: " + gameBoard.getScore() + "          -Lives: " + gameBoard.getShooter().getLives());
+        setTitle(title);
         setSize(width, height);
         setResizable(false);
         setVisible(true);
@@ -81,7 +81,7 @@ public class SpaceInvaders extends JFrame {
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
                 gameBoard.shoot(gameBoard.getShooter());
                 repaint();
-                setTitle("Space Invaders - Score: " + gameBoard.getScore() + "          -Lives: " + gameBoard.getShooter().getLives());
+                setTitle(title);
             }
 
         }
