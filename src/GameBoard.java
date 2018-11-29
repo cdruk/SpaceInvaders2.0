@@ -189,7 +189,6 @@ class GameBoard extends JComponent {
 
     private void paintShooter(Graphics2D g) {
         g.drawImage(shooterPic, shooter.getCol() * cellSize, shooter.getRow() * cellSize, null);
-
     }
 
     void moveShooter() {
