@@ -38,7 +38,7 @@ public class SpaceInvaders extends JFrame {
             }
             repaint();
         };
-        Timer timer = new Timer(750, moveListener);
+        Timer timer = new Timer(950  , moveListener);
         timer.setRepeats(true);
         timer.start();
 
@@ -50,6 +50,10 @@ public class SpaceInvaders extends JFrame {
         ActionListener warListener = e -> {
             gameBoard.war();
             setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
+            alienDir = gameBoard.moveAliens(alienDir);
+            if(gameBoard.isGameOver()){
+                gameBoard.exit();
+            }
         };
 
         Timer warTimerOne = new Timer(1000, warListener);
