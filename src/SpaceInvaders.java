@@ -8,145 +8,70 @@ import java.awt.event.KeyEvent;
 
 public class SpaceInvaders extends JFrame {
 
-    private Engine engine;
-
     private static final int SQUARE_SIZE = 40;
+    GameBoard gameBoard;
+    Direction alienDir;
 
     private SpaceInvaders() {
-        engine = createEngine();
-        setWindowProperties();
-    }
-
-    private Engine createEngine() {
-
-        Container cp = getContentPane();
-        GameBoard gameBoard = new GameBoard(SQUARE_SIZE);
-        Engine engine = new Engine(gameBoard);
-
+        gameBoard = new GameBoard(SQUARE_SIZE);
+        gameBoard.setBackground(Color.black);
         int canvasWidth = SQUARE_SIZE * gameBoard.BOARD_COLS;
         int canvasHeight = SQUARE_SIZE * gameBoard.BOARD_ROWS;
-        engine.setPreferredSize(new Dimension(canvasWidth, canvasHeight));
-
+        setWindowProperties(canvasWidth, canvasHeight + 10 );
+        JComponent mainPanel = gameBoard;
+        add(mainPanel);
         addKeyListener(new MyKeyAdapter());
-
-        cp.add(engine);
-
-        return engine;
+        runGame();
     }
 
-    private void setWindowProperties() {
+    private void runGame() {
+        alienDir = Direction.RIGHT;
+        ActionListener moveListener = e -> {
+            alienDir = gameBoard.moveAliens(alienDir);
+            repaint();
+        };
+        Timer timer = new Timer(1000, moveListener);
+        timer.setRepeats(true);
+        timer.start();
+    }
+
+
+    @Override
+    public void paint(Graphics g){
+
+        gameBoard.repaint();
+    }
+
+    private void setWindowProperties(int width, int height) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Space Invaders - Score: 0");
+        setTitle("Space Invaders - Score: " + gameBoard.getScore());
+        setSize(width, height);
         setResizable(false);
-        pack();
         setVisible(true);
-        setLocationRelativeTo(null);// Center window
-
+        setLocationRelativeTo(null);
     }
 
-    private void startGame(Engine engine) {
-        Thread th = new Thread(engine);
-        th.start();
-    }
-
-    /**
-     * Contains the game loop.
-     */
-    protected class Engine extends JPanel implements Runnable {
-
-        private GameBoard gameBoard;
-        private boolean running = false;
-
-        private Engine(GameBoard gameBoard) {
-            this.gameBoard = gameBoard;
-        }
-
-
-
-        @Override
-        protected void paintComponent(Graphics graphics) {
-            super.paintComponent(graphics);
-
-            setBackground(new Color(0, 0, 0));
-
-            gameBoard.paint(graphics);
-        }
-
-        public void run() {
-
-            long lastTime = System.nanoTime();
-            double elapsedTime = 0.0;
-
-            double FPS = 15.0;
-
-            // Game loop.
-            while (true) {
-
-                long now = System.nanoTime();
-                elapsedTime += ((now - lastTime) / 1_000_000_000.0) * FPS;
-                lastTime = System.nanoTime();
-
-                if (elapsedTime >= 1) {
-                    setTitle("Space Invaders - Score: " + gameBoard.getScore());
-                    elapsedTime--;
-                }
-
-                ActionListener refresher = e -> {
-                    //gameBoard.nextRound();
-                    repaint();
-                };
-
-                new Timer(15000, refresher).start();
-                ActionListener listener = e -> {
-
-                    //gameBoard.nextRound();
-                };
-                Timer timer = new Timer(15000, listener);
-                timer.setRepeats(true);
-                timer.start();
-
-                sleep();
-                repaint();
-            }
-
-
-        }
-
-    }
-
-
-    private void sleep() {
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
-   private class MyKeyAdapter extends KeyAdapter {
+    private class MyKeyAdapter extends KeyAdapter {
 
         @Override
         public void keyPressed(KeyEvent keyEvent) {
 
-            if (!engine.running) {
-                startGame(engine);
-                engine.running = true;
-            }
-
             if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
-                engine.gameBoard.movement = Direction.LEFT;
-                engine.gameBoard.moveShooter();
+                gameBoard.movement = Direction.LEFT;
+                gameBoard.moveShooter();
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
-                engine.gameBoard.movement = Direction.RIGHT;
-                engine.gameBoard.moveShooter();
+                gameBoard.movement = Direction.RIGHT;
+                gameBoard.moveShooter();
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
-                engine.gameBoard.shoot();
+                gameBoard.shoot();
+                repaint();
+                setTitle("Space Invaders - Score: " + gameBoard.getScore());
             }
 
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(SpaceInvaders::new);
+        new SpaceInvaders().setVisible(true);
     }
 }
