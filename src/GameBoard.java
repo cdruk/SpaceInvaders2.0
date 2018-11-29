@@ -182,12 +182,12 @@ class GameBoard extends JComponent {
             }
             if (gameWon()) {
                 g.setColor(Color.WHITE);
-                g.drawString(endMessage, (BOARD_COLS/2 * cellSize) - g.getFontMetrics().stringWidth(endMessage), BOARD_ROWS/2 * cellSize);
+                g.drawString(endMessage, (BOARD_COLS/2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage)/2), BOARD_ROWS/2 * cellSize);
 
             }
             if (gameLost()) {
                 g.setColor(Color.WHITE);
-                g.drawString(endMessage, (BOARD_COLS/2 * cellSize) - g.getFontMetrics().stringWidth(endMessage), BOARD_ROWS/2 * cellSize);
+                g.drawString(endMessage, (BOARD_COLS/2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage)/2), BOARD_ROWS/2 * cellSize);
 
             }
         }
