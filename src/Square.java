@@ -1,11 +1,11 @@
 ///**
-// * Represents a square on the board. Each Square has an Entity. An Entity
+// * Represents a square on the board. Each Square has an entities.Entity. An entities.Entity
 // * is what is on the Square: either there is the shooter, an alien, the projectile,
 // * or it is empty.
 // */
 //public class Square {
 //
-//    private Entity entity;
+//    private entities.Entity entity;
 //    private int row;
 //    private int col;
 //
@@ -17,7 +17,7 @@
 //     * @param col the col coordinate of the square
 //     */
 //    public Square(int row, int col) {
-//        this(Entity.Empty, row, col);
+//        this(entities.Entity.entities.Empty, row, col);
 //    }
 //
 //    /**
@@ -27,7 +27,7 @@
 //     * @param row      the row coordinate of the square
 //     * @param col      the col coordinate of the square
 //     */
-//    Square(Entity entity, int row, int col) {
+//    Square(entities.Entity entity, int row, int col) {
 //        this.entity = entity;
 //        this.row = row;
 //        this.col = col;
@@ -38,7 +38,7 @@
 //     *
 //     * @param entity the new entity
 //     */
-//    void setEntity(Entity entity) {
+//    void setEntity(entities.Entity entity) {
 //
 //        this.entity = entity;
 //    }
@@ -48,7 +48,7 @@
 //     *
 //     * @return the entity on the Square
 //     */
-//    Entity getEntity() {
+//    entities.Entity getEntity() {
 //        return entity;
 //    }
 //

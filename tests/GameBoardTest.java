@@ -1,4 +1,4 @@
-import org.junit.Assert;
+import entities.*;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
