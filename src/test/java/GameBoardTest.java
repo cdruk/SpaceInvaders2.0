@@ -32,7 +32,6 @@ public class GameBoardTest {
         assertTrue(newCol == oldCol + 1);
         int newRow = shooter.getRow();
         assertTrue(oldRow == newRow);
-
         assertTrue(board.getGameBoard()[newCol][newRow] instanceof Shooter);
         assertTrue(board.getGameBoard()[oldCol][oldRow] instanceof Empty);
     }

@@ -14,6 +14,11 @@ class GameBoard extends JComponent {
     private Projectile alienProjectile;
     private int score = 0;
     private ArrayList<Alien> aliens;
+
+    public Entity[][] getGameBoard() {
+        return gameBoard;
+    }
+
     private Entity[][] gameBoard;
     final int BOARD_ROWS = 12;
     final int BOARD_COLS = 15;
@@ -37,7 +42,6 @@ class GameBoard extends JComponent {
         generateAliens();
         generateShooter();
     }
-
 
 
     private void generateGameBoard() {
@@ -170,9 +174,9 @@ class GameBoard extends JComponent {
                     g.fillRect(entity.getCol() * cellSize, entity.getRow() * cellSize, cellSize, cellSize);
                 }
             }
-                g.setColor(Color.WHITE);
-                g.drawString(endMessage,
-                        (BOARD_COLS/2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage)/2), BOARD_ROWS/2 * cellSize);
+            g.setColor(Color.WHITE);
+            g.drawString(endMessage,
+                    (BOARD_COLS / 2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage) / 2), BOARD_ROWS / 2 * cellSize);
         }
     }
 
@@ -295,7 +299,7 @@ class GameBoard extends JComponent {
 
 
     public boolean isGameOver() {
-        if (gameLost()|| gameWon()){
+        if (gameLost() || gameWon()) {
             gameOver = true;
         }
         return gameOver;
@@ -343,7 +347,7 @@ class GameBoard extends JComponent {
                 }
             }
         }
-        if(!gameOver) {
+        if (!gameOver) {
             Random random = new Random();
             int randomAlien = random.nextInt(possibleCols.size());
             Collections.shuffle(aliens);
@@ -367,8 +371,5 @@ class GameBoard extends JComponent {
             }
         }
         return bottowRowAliens;
-    }
-    Entity[][] getGameBoard() {
-        return gameBoard;
     }
 }
