@@ -108,7 +108,7 @@ public class SpaceInvaders extends JFrame {
                     gameBoard.movement = Direction.RIGHT;
                     gameBoard.moveShooter();
                 } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
-                    gameBoard.shooterShoot(gameBoard.getShooter());
+                    gameBoard.shoot(gameBoard.getShooter());
                     repaint();
                     setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
                 }

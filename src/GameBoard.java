@@ -261,9 +261,9 @@ class GameBoard extends JComponent {
         }
         if (entity.getClass() == Alien.class) {
             g.setColor(Color.YELLOW);
-            g.drawLine((alienProjectile.getCol() * cellSize) + cellSize / 3,
+            g.drawLine((alienProjectile.getCol() * cellSize) + cellSize / 2,
                     (alienProjectile.getRow() * cellSize) + cellSize / 2,
-                    (alienProjectile.getCol() * cellSize) + cellSize / 3,
+                    (alienProjectile.getCol() * cellSize) + cellSize / 2,
                     ((alienProjectile.getRow() + 1) * cellSize) + cellSize / 2);
         }
     }
@@ -273,7 +273,7 @@ class GameBoard extends JComponent {
     private Timer alienShotTimer;
     private Alien shootingAlien;
 
-    void shooterShoot(Entity entity) {
+    void shoot(Entity entity) {
         if (entity.getClass() == Shooter.class) {
             for (int loc = BOARD_ROWS - 1; loc >= 0; loc--) {
                 shooterProjectile = new Projectile(shooter.getCol(), loc);
@@ -374,7 +374,7 @@ class GameBoard extends JComponent {
             Collections.shuffle(possibleCols);
 
             shootingAlien = aliens.get(randomAlien);
-            shooterShoot(shootingAlien);
+            shoot(shootingAlien);
         }
     }
 
