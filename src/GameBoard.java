@@ -3,7 +3,7 @@ import entities.*;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
- import java.awt.event.ActionListener;
+import java.awt.event.ActionListener;
 import java.util.*;
 
 
@@ -182,12 +182,12 @@ class GameBoard extends JComponent {
             }
             if (gameWon()) {
                 g.setColor(Color.WHITE);
-                g.drawString(endMessage, (BOARD_COLS/2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage)/2), BOARD_ROWS/2 * cellSize);
+                g.drawString(endMessage, (BOARD_COLS / 2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage) / 2), BOARD_ROWS / 2 * cellSize);
 
             }
             if (gameLost()) {
                 g.setColor(Color.WHITE);
-                g.drawString(endMessage, (BOARD_COLS/2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage)/2), BOARD_ROWS/2 * cellSize);
+                g.drawString(endMessage, (BOARD_COLS / 2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage) / 2), BOARD_ROWS / 2 * cellSize);
 
             }
         }
@@ -221,10 +221,10 @@ class GameBoard extends JComponent {
     }
 
 
-//    private void exit() {
-//        System.out.println("Final Score: " + getScore());
-//        System.exit(0);
-//    }
+    void exit() {
+        System.out.println("Final Score: " + getScore());
+        System.exit(0);
+    }
 
 
     int getScore() {
@@ -319,7 +319,7 @@ class GameBoard extends JComponent {
 
 
     public boolean isGameOver() {
-        if (gameLost()|| gameWon()){
+        if (gameLost() || gameWon()) {
             gameOver = true;
         }
         return gameOver;
@@ -367,7 +367,7 @@ class GameBoard extends JComponent {
                 }
             }
         }
-        if(!gameOver) {
+        if (!gameOver) {
             Random random = new Random();
             int randomAlien = random.nextInt(possibleCols.size());
             Collections.shuffle(aliens);

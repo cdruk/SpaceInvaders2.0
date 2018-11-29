@@ -16,6 +16,7 @@ public class SpaceInvaders extends JFrame {
     String lives;
     Timer timer;
     Timer warTimer;
+    boolean startNewGame;
 
     private SpaceInvaders() {
         title = "Space Invaders - Score: ";
@@ -111,12 +112,22 @@ public class SpaceInvaders extends JFrame {
                     gameBoard.shoot(gameBoard.getShooter());
                     repaint();
                     setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
+                }else if(keyEvent.getKeyCode() == KeyEvent.VK_ENTER){
+                    startNewGame = true;
+
                 }
             }
         }
     }
 
     public static void main(String[] args) {
-        new SpaceInvaders().setVisible(true);
+        SpaceInvaders space = new SpaceInvaders();
+        space.setVisible(true);
+        if(space.startNewGame){
+            space.startNewGame = false;
+            space = new SpaceInvaders();
+            space.setVisible(true);
+        }
+
     }
 }
