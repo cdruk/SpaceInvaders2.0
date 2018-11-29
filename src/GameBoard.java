@@ -26,7 +26,7 @@ class GameBoard extends JComponent {
     private int allAliens;
     private int deadAliens;
     private boolean noMoreLives;
-    private boolean gameOver;
+    private boolean gameOver = false;
 
     GameBoard(int cellSize) {
         gameBoard = new Entity[BOARD_COLS][BOARD_ROWS];
@@ -316,7 +316,12 @@ class GameBoard extends JComponent {
     }
 
     private void endGame() {
+        alienShotTimer.stop();
         gameOver = true;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
     }
 
     private boolean gameLost() {

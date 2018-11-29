@@ -15,6 +15,8 @@ public class SpaceInvaders extends JFrame {
     Direction alienDir;
     String title;
     String lives;
+    Timer timer;
+    Timer warTimer;
 
     private SpaceInvaders() {
         gameBoard = new GameBoard(SQUARE_SIZE);
@@ -28,7 +30,12 @@ public class SpaceInvaders extends JFrame {
         add(mainPanel);
         addKeyListener(new MyKeyAdapter());
         runGame();
+//        if (gameBoard.isGameOver()){
+//            stopGame();
+//        }
     }
+
+
 
     private void runGame() {
         alienDir = Direction.RIGHT;
@@ -36,11 +43,11 @@ public class SpaceInvaders extends JFrame {
             alienDir = gameBoard.moveAliens(alienDir);
             repaint();
         };
-        Timer timer = new Timer(500, moveListener);
+        timer = new Timer(500, moveListener);
         timer.setRepeats(true);
         timer.start();
 
-        startWar();
+       while(!gameBoard.isGameOver()) startWar();
     }
 
     private void startWar() {
@@ -49,9 +56,14 @@ public class SpaceInvaders extends JFrame {
             gameBoard.war();
             setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
         };
-        Timer warTimerOne = new Timer(1000, warListener);
-        warTimerOne.setRepeats(true);
-        warTimerOne.start();
+        warTimer = new Timer(1000, warListener);
+        warTimer.setRepeats(true);
+        warTimer.start();
+    }
+
+    private void stopGame() {
+        timer.stop();
+        warTimer.stop();
     }
 
     @Override
