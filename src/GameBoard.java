@@ -183,10 +183,14 @@ class GameBoard extends JComponent {
             if (gameWon()) {
                 g.setColor(Color.WHITE);
                 String msg = "You Win! \n Score = " + score;
+                g.drawString(msg, BOARD_COLS/2 * cellSize, BOARD_ROWS/2 * cellSize);
+
             }
             if (gameLost()) {
                 g.setColor(Color.WHITE);
                 String msg = "You Lose. \n Score = " + score;
+                g.drawString(msg, BOARD_COLS/2 * cellSize, BOARD_ROWS/2 * cellSize);
+
             }
         }
     }
