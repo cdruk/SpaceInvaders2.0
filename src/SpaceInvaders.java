@@ -50,20 +50,7 @@ public class SpaceInvaders extends JFrame {
         Timer warTimerOne = new Timer(1000, warOneListener);
         warTimerOne.setRepeats(true);
         warTimerOne.start();
-
-        /*ActionListener warTwoListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gameBoard.war();
-                setTitle("Space Invaders - Score: " + gameBoard.getScore() + "          -Lives: " + gameBoard.getShooter().getLives());
-            }
-        };
-        Timer warTimerTwo = new Timer(2000, warTwoListener);
-        warTimerTwo.setRepeats(true);
-        warTimerTwo.start();
-*/
     }
-
 
     @Override
     public void paint(Graphics g) {
