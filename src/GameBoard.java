@@ -26,6 +26,7 @@ class GameBoard extends JComponent {
     private int deadAliens;
     private boolean noMoreLives;
     private boolean gameOver = false;
+    private String endMessage;
 
     GameBoard(int cellSize) {
         gameBoard = new Entity[BOARD_COLS][BOARD_ROWS];
@@ -181,14 +182,12 @@ class GameBoard extends JComponent {
             }
             if (gameWon()) {
                 g.setColor(Color.WHITE);
-                String msg = "You Win! \n Score = " + score;
-                g.drawString(msg, BOARD_COLS/2 * cellSize, BOARD_ROWS/2 * cellSize);
+                g.drawString(endMessage, (BOARD_COLS/2 * cellSize) - g.getFontMetrics().stringWidth(endMessage), BOARD_ROWS/2 * cellSize);
 
             }
             if (gameLost()) {
                 g.setColor(Color.WHITE);
-                String msg = "You Lose. \n Score = " + score;
-                g.drawString(msg, BOARD_COLS/2 * cellSize, BOARD_ROWS/2 * cellSize);
+                g.drawString(endMessage, (BOARD_COLS/2 * cellSize) - g.getFontMetrics().stringWidth(endMessage), BOARD_ROWS/2 * cellSize);
 
             }
         }
@@ -283,7 +282,7 @@ class GameBoard extends JComponent {
                 if (removeAlienIfShot()) {
                     repaint();
                     if (gameWon() || gameLost()) {
-                        endGame();
+                        gameOver = true;
                     }
                     break;
                 }
@@ -302,6 +301,7 @@ class GameBoard extends JComponent {
                     if (shooter.getLives() != 1) {
                         shooter.setLives(shooter.getLives() - 1);
                     } else {
+                        shooter.setLives(shooter.getLives() - 1);
                         noMoreLives = true;
                     }
                 } else if (alienRow == BOARD_ROWS - 1) {
@@ -311,19 +311,17 @@ class GameBoard extends JComponent {
                 }
                 repaint();
             };
-            alienShotTimer = new Timer(150, moveAlienShotDownListener);
+            alienShotTimer = new Timer(200, moveAlienShotDownListener);
             alienShotTimer.setRepeats(true);
             alienShotTimer.start();
         }
     }
 
 
-    private void endGame() {
-        alienShotTimer.stop();
-        gameOver = true;
-    }
-
     public boolean isGameOver() {
+        if (gameLost()|| gameWon()){
+            gameOver = true;
+        }
         return gameOver;
     }
 
@@ -338,12 +336,20 @@ class GameBoard extends JComponent {
         if (rows.contains(BOARD_ROWS - 2) || noMoreLives) {
 
             over = true;
+            endMessage = "You Lose. \n Score = " + score;
+            gameOver = true;
+
         }
         return over;
     }
 
     private boolean gameWon() {
-        return allAliens == deadAliens;
+        boolean over = false;
+        if (allAliens == deadAliens) {
+            over = true;
+            endMessage = "You Win. \n Score = " + score;
+        }
+        return over;
     }
 
     Shooter getShooter() {
@@ -361,13 +367,15 @@ class GameBoard extends JComponent {
                 }
             }
         }
-        Random random = new Random();
-        int randomAlien = random.nextInt(possibleCols.size());
-        Collections.shuffle(aliens);
-        Collections.shuffle(possibleCols);
+        if(!gameOver) {
+            Random random = new Random();
+            int randomAlien = random.nextInt(possibleCols.size());
+            Collections.shuffle(aliens);
+            Collections.shuffle(possibleCols);
 
-        shootingAlien = aliens.get( randomAlien);
-        shooterShoot(shootingAlien);
+            shootingAlien = aliens.get(randomAlien);
+            shooterShoot(shootingAlien);
+        }
     }
 
     private ArrayList<Alien> getBottomRowAliens() {

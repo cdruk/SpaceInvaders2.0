@@ -29,24 +29,23 @@ public class SpaceInvaders extends JFrame {
         add(mainPanel);
         addKeyListener(new MyKeyAdapter());
         runGame();
-        if (gameBoard.isGameOver()){
+        if (gameBoard.isGameOver()) {
             gameBoard = null;
         }
     }
-
 
 
     private void runGame() {
         alienDir = Direction.RIGHT;
         ActionListener moveListener = e -> {
             alienDir = gameBoard.moveAliens(alienDir);
-            if(gameBoard.isGameOver()){
-                gameBoard.exit();
+            if (gameBoard.isGameOver()) {
+                stopGame();
             }
             repaint();
         };
 
-        timer = new Timer(950  , moveListener);
+        timer = new Timer(950, moveListener);
 
         timer.setRepeats(true);
         timer.start();
@@ -56,30 +55,36 @@ public class SpaceInvaders extends JFrame {
 
     private void startWar() {
 
+        if (gameBoard.isGameOver()) {
+            stopGame();
+        }
+
         ActionListener warListener = e -> {
             gameBoard.war();
             setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
             alienDir = gameBoard.moveAliens(alienDir);
-            if(gameBoard.isGameOver()){
-                gameBoard.exit();
-            }
+
         };
 
         warTimer = new Timer(1000, warListener);
         warTimer.setRepeats(true);
         warTimer.start();
+
     }
 
     private void stopGame() {
+
         timer.stop();
         warTimer.stop();
+        gameBoard = null;
 
     }
 
     @Override
     public void paint(Graphics g) {
-
-        gameBoard.repaint();
+        if (gameBoard != null) {
+            gameBoard.repaint();
+        }
     }
 
     private void setWindowProperties(int width, int height) {
@@ -95,19 +100,19 @@ public class SpaceInvaders extends JFrame {
 
         @Override
         public void keyPressed(KeyEvent keyEvent) {
-
-            if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
-                gameBoard.movement = Direction.LEFT;
-                gameBoard.moveShooter();
-            } else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
-                gameBoard.movement = Direction.RIGHT;
-                gameBoard.moveShooter();
-            } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
-                gameBoard.shooterShoot(gameBoard.getShooter());
-                repaint();
-                setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives() );
+            if (gameBoard != null) {
+                if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
+                    gameBoard.movement = Direction.LEFT;
+                    gameBoard.moveShooter();
+                } else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    gameBoard.movement = Direction.RIGHT;
+                    gameBoard.moveShooter();
+                } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
+                    gameBoard.shooterShoot(gameBoard.getShooter());
+                    repaint();
+                    setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
+                }
             }
-
         }
     }
 
