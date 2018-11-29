@@ -8,17 +8,17 @@ import java.util.*;
 
 
 class GameBoard extends JComponent {
-    protected int cellSize;
+    private int cellSize;
     private Shooter shooter;
     private Projectile shooterProjectile;
     private Projectile alienProjectile;
     private int score = 0;
     private ArrayList<Alien> aliens;
     private Entity[][] gameBoard;
-    public final int BOARD_ROWS = 12;
-    public final int BOARD_COLS = 15;
+    final int BOARD_ROWS = 12;
+    final int BOARD_COLS = 15;
     Direction movement;
-    Graphics2D g;
+    private Graphics2D g;
     private boolean shooting;
     private Image alienPic;
     private Image shooterPic;
@@ -38,16 +38,7 @@ class GameBoard extends JComponent {
         generateShooter();
     }
 
-    GameBoard() {
-        gameBoard = new Entity[BOARD_COLS][BOARD_ROWS];
-        generateGameBoard();
-        generateAliens();
-        generateShooter();
-    }
 
-    Entity[][] getGameBoard() {
-        return gameBoard;
-    }
 
     private void generateGameBoard() {
         for (int col = 0; col < BOARD_COLS; col++) {
@@ -177,18 +168,11 @@ class GameBoard extends JComponent {
                 for (int row = 0; row < BOARD_ROWS; row++) {
                     Entity entity = gameBoard[col][row];
                     g.fillRect(entity.getCol() * cellSize, entity.getRow() * cellSize, cellSize, cellSize);
-
                 }
             }
-            if (gameWon()) {
                 g.setColor(Color.WHITE);
-                g.drawString(endMessage, (BOARD_COLS/2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage)/2), BOARD_ROWS/2 * cellSize);
-
-            }
-            if (gameLost()) {
-                g.setColor(Color.WHITE);
-                g.drawString(endMessage, (BOARD_COLS/2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage)/2), BOARD_ROWS/2 * cellSize);
-            }
+                g.drawString(endMessage,
+                        (BOARD_COLS/2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage)/2), BOARD_ROWS/2 * cellSize);
         }
     }
 
@@ -337,7 +321,7 @@ class GameBoard extends JComponent {
 
     private boolean gameWon() {
         boolean over = false;
-        if (allAliens == deadAliens) {
+        if (allAliens == deadAliens && !noMoreLives) {
             over = true;
             endMessage = "You Win. \n Score = " + score;
         }
