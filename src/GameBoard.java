@@ -235,9 +235,9 @@ class GameBoard extends JComponent {
         if (entity.getClass() == Alien.class) {
             g.setColor(Color.YELLOW);
             g.drawLine((alienProjectile.getCol() * cellSize) + cellSize / 3,
-                    ((alienProjectile.getRow() - 1) * cellSize) + cellSize / 2,
+                    (alienProjectile.getRow() * cellSize) + cellSize / 2,
                     (alienProjectile.getCol() * cellSize) + cellSize / 3,
-                    (alienProjectile.getRow() * cellSize) + cellSize / 2);
+                    ((alienProjectile.getRow() + 1) * cellSize) + cellSize / 2);
         }
     }
 
