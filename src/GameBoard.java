@@ -15,17 +15,12 @@ class GameBoard extends JComponent {
     private Projectile projectile;
     private int score = 0;
     private ArrayList<Alien> aliens;
-
-    public Entity[][] getGameBoard() {
-        return gameBoard;
-    }
-
     private Entity[][] gameBoard;
     public final int BOARD_ROWS = 12;
     public final int BOARD_COLS = 15;
-    public Direction movement;
+    Direction movement;
     Graphics2D g;
-    public boolean shooting;
+    private boolean shooting;
     private Image alienPic;
     private Image shooterPic;
     private int allAliens;
@@ -46,6 +41,9 @@ class GameBoard extends JComponent {
         generateGameBoard();
         generateAliens();
         generateShooter();
+    }
+    public Entity[][] getGameBoard() {
+        return gameBoard;
     }
 
     private void generateGameBoard() {
@@ -241,8 +239,6 @@ class GameBoard extends JComponent {
                 (shooter.getRow() * cellSize) + cellSize / 2,
                 (shooter.getCol() * cellSize) + cellSize / 2,
                 (projectile.getRow() * cellSize) + cellSize / 2);
-        sleep();
-
     }
 
     void shoot() {
@@ -276,19 +272,7 @@ class GameBoard extends JComponent {
         return allAliens == deadAliens;
     }
 
-    private void sleep() {
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
-    }
-
     Shooter getShooter() {
         return shooter;
-    }
-
-    ArrayList<Alien> getAliens() {
-        return aliens;
     }
 }
