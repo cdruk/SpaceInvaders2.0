@@ -21,11 +21,11 @@ public class GameBoardTest {
     }
 
     @Test
-    public void moveShooterTest(){
+    public void moveShooterTest() {
         Shooter shooter = board.getShooter();
         int oldCol = shooter.getCol();
         int oldRow = shooter.getRow();
-        assertTrue(board.getGameBoard()[oldCol][oldRow] instanceof  Shooter);
+        assertTrue(board.getGameBoard()[oldCol][oldRow] instanceof Shooter);
         board.movement = Direction.RIGHT;
         board.moveShooter();
         int newCol = shooter.getCol();
@@ -33,8 +33,8 @@ public class GameBoardTest {
         int newRow = shooter.getRow();
         assertTrue(oldRow == newRow);
 
-        assertTrue(board.getGameBoard()[newCol][newRow] instanceof  Shooter);
-        assertTrue(board.getGameBoard()[oldCol][oldRow] instanceof  Empty);
+        assertTrue(board.getGameBoard()[newCol][newRow] instanceof Shooter);
+        assertTrue(board.getGameBoard()[oldCol][oldRow] instanceof Empty);
     }
 
 }

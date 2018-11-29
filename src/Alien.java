@@ -1,6 +1,6 @@
 
 
-public class Alien extends Entity{
+public class Alien extends Entity {
 
     private boolean alive = true;
 

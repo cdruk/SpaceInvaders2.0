@@ -134,7 +134,7 @@ class GameBoard extends JComponent {
         return newDir;
     }
 
-    private int getAlienInt(ArrayList<Alien> oldAliens,int currentCol, int currentRow) {
+    private int getAlienInt(ArrayList<Alien> oldAliens, int currentCol, int currentRow) {
         int index = 0;
         for (int i = 0; i < oldAliens.size(); i++) {
             if (oldAliens.get(i).getCol() == currentCol && oldAliens.get(i).getRow() == currentRow) {
