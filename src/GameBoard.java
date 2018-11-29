@@ -3,6 +3,7 @@ import entities.*;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.ActionListener;
 import java.util.*;
 
@@ -313,54 +314,24 @@ class GameBoard extends JComponent {
     }
 
     void war() {
-        /*Random ran = new Random();
-        ArrayList<Integer> rows = new ArrayList<>();
-        ArrayList<Alien> maxRows = new ArrayList<>();
-        for (Alien alien : aliens) {
-            rows.add(alien.getRow());
-        }
-        int maxRow = Collections.max(rows);
-
-        for (Alien alien : aliens) {
-            if (alien.getRow() == maxRow) {
-                maxRows.add(alien);
-            }
-        }
-
-        ArrayList<Alien> evenAliens = new ArrayList<>();
-        ArrayList<Alien> oddAliens = new ArrayList<>();
-        ArrayList<Integer> evenAlienColumns = new ArrayList<>();
-        ArrayList<Integer> oddAlienColumns = new ArrayList<>();
-        for (Alien alien : maxRows) {
-            if (alien.getCol() % 2 == 0) {
-                evenAliens.add(alien);
-                evenAlienColumns.add(alien.getCol());
-            } else {
-                oddAliens.add(alien);
-                oddAlienColumns.add(alien.getCol());
-            }
-        }
-        Alien shootingAlien = null;
-        if (whichAliens.equals("even")) {
-            while (shootingAlien == null) {
-                int col = ran.nextInt(Collections.max(evenAlienColumns));
-                if (evenAlienColumns.contains(col)) {
-                    shootingAlien = aliens.get(getAlienInt(col, maxRow));
-                }
-            }
-        } else {
-            while (shootingAlien == null) {
-                int col = ran.nextInt(Collections.max(oddAlienColumns));
-                if (oddAlienColumns.contains(col)) {
-                    shootingAlien = aliens.get(getAlienInt(col, maxRow));
-                }
-            }
-        }*/
         ArrayList<Alien> aliens = getBottomRowAliens();
+        ArrayList<Integer> possibleCols = new ArrayList<>();
+        for(int i = 0; i < 10; i++)
+        {
+            for(Alien alien : aliens)
+            {
+                int col = alien.getCol();
+                if(!possibleCols.contains(col))
+                {
+                    possibleCols.add(col);
+                }
+            }
+        }
         Random random = new Random();
-        int randomAlien = random.nextInt(10);
+        int randomAlien = random.nextInt(possibleCols.size());
         Collections.shuffle(aliens);
-        shootingAlien = getBottomRowAliens().get(randomAlien);
+        Collections.shuffle(possibleCols);
+        shootingAlien = aliens.get(randomAlien);
         shoot(shootingAlien);
     }
 

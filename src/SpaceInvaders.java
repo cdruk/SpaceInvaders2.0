@@ -52,7 +52,6 @@ public class SpaceInvaders extends JFrame {
         warTimerOne.start();
     }
 
-
     @Override
     public void paint(Graphics g) {
 
