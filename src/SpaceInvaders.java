@@ -1,3 +1,5 @@
+import entities.Direction;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -63,7 +65,7 @@ public class SpaceInvaders extends JFrame {
                 gameBoard.movement = Direction.RIGHT;
                 gameBoard.moveShooter();
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
-                gameBoard.shooterShoot();
+                gameBoard.shoot();
                 repaint();
                 setTitle("Space Invaders - Score: " + gameBoard.getScore());
             }
