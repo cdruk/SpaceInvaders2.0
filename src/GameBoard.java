@@ -331,7 +331,7 @@ class GameBoard extends JComponent {
         int randomAlien = random.nextInt(possibleCols.size());
         Collections.shuffle(aliens);
         Collections.shuffle(possibleCols);
-        shootingAlien = aliens.get(randomAlien);
+        shootingAlien = aliens.get( randomAlien);
         shoot(shootingAlien);
     }
 
