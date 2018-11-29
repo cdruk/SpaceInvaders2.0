@@ -1,3 +1,4 @@
+import java.awt.*;
 
 public abstract class Entity {
     private int col;
