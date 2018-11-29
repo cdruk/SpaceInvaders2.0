@@ -8,17 +8,16 @@ import java.util.*;
 
 
 class GameBoard extends JComponent {
-    protected int cellSize;
+    private int cellSize;
     private Shooter shooter;
     private Projectile shooterProjectile;
     private Projectile alienProjectile;
     private int score = 0;
     private ArrayList<Alien> aliens;
     private Entity[][] gameBoard;
-    public final int BOARD_ROWS = 12;
-    public final int BOARD_COLS = 15;
+    final int BOARD_ROWS = 12;
+    final int BOARD_COLS = 15;
     Direction movement;
-    Graphics2D g;
     private boolean shooting;
     private Image alienPic;
     private Image shooterPic;
@@ -38,16 +37,7 @@ class GameBoard extends JComponent {
         generateShooter();
     }
 
-    GameBoard() {
-        gameBoard = new Entity[BOARD_COLS][BOARD_ROWS];
-        generateGameBoard();
-        generateAliens();
-        generateShooter();
-    }
 
-    Entity[][] getGameBoard() {
-        return gameBoard;
-    }
 
     private void generateGameBoard() {
         for (int col = 0; col < BOARD_COLS; col++) {
@@ -151,7 +141,7 @@ class GameBoard extends JComponent {
 
     @Override
     public void paintComponent(Graphics graphics) {
-        g = (Graphics2D) graphics;
+        Graphics2D g = (Graphics2D) graphics;
         g.setColor(Color.black);
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         paintAliens(g);
@@ -318,7 +308,7 @@ class GameBoard extends JComponent {
     }
 
 
-    public boolean isGameOver() {
+    boolean isGameOver() {
         if (gameLost()|| gameWon()){
             gameOver = true;
         }

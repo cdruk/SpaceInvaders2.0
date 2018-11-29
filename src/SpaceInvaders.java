@@ -10,12 +10,12 @@ import java.awt.event.KeyEvent;
 public class SpaceInvaders extends JFrame {
 
     private static final int SQUARE_SIZE = 40;
-    GameBoard gameBoard;
-    Direction alienDir;
-    String title;
-    String lives;
-    Timer timer;
-    Timer warTimer;
+    private GameBoard gameBoard;
+    private Direction alienDir;
+    private String title;
+    private String lives;
+    private Timer timer;
+    private Timer warTimer;
 
     private SpaceInvaders() {
         title = "Space Invaders - Score: ";
