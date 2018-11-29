@@ -43,7 +43,7 @@ public class SpaceInvaders extends JFrame {
         ActionListener warOneListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameBoard.war("odd");
+                gameBoard.war();
                 setTitle("Space Invaders - Score: " + gameBoard.getScore() + "          -Lives: " + gameBoard.getShooter().getLives());
             }
         };
@@ -51,17 +51,17 @@ public class SpaceInvaders extends JFrame {
         warTimerOne.setRepeats(true);
         warTimerOne.start();
 
-        ActionListener warTwoListener = new ActionListener() {
+        /*ActionListener warTwoListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameBoard.war("even");
+                gameBoard.war();
                 setTitle("Space Invaders - Score: " + gameBoard.getScore() + "          -Lives: " + gameBoard.getShooter().getLives());
             }
         };
         Timer warTimerTwo = new Timer(2000, warTwoListener);
         warTimerTwo.setRepeats(true);
         warTimerTwo.start();
-
+*/
     }
 
 

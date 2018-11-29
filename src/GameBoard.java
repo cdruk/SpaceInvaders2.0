@@ -312,7 +312,7 @@ class GameBoard extends JComponent {
         return shooter;
     }
 
-    void war(String whichAliens) {
+    void war() {
         /*Random ran = new Random();
         ArrayList<Integer> rows = new ArrayList<>();
         ArrayList<Alien> maxRows = new ArrayList<>();
@@ -356,8 +356,11 @@ class GameBoard extends JComponent {
                 }
             }
         }*/
-        Collections.shuffle(getBottomRowAliens());
-        shootingAlien = getBottomRowAliens().get(0);
+        ArrayList<Alien> aliens = getBottomRowAliens();
+        Random random = new Random();
+        int randomAlien = random.nextInt(10);
+        Collections.shuffle(aliens);
+        shootingAlien = getBottomRowAliens().get(randomAlien);
         shoot(shootingAlien);
     }
 
