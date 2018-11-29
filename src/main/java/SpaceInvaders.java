@@ -42,7 +42,7 @@ public class SpaceInvaders extends JFrame {
             if (gameBoard.isGameOver()) {
                 stopGame();
             }
-            repaint();
+            gameBoard.repaint();
         };
 
         timer = new Timer(950, moveListener);

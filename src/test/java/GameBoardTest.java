@@ -4,7 +4,7 @@ import org.junit.Test;
 import static junit.framework.TestCase.assertTrue;
 
 public class GameBoardTest {
-    GameBoard board = new GameBoard();
+    GameBoard board = new GameBoard(40);
 
 
     @Test
@@ -33,11 +33,7 @@ public class GameBoardTest {
         int newRow = shooter.getRow();
         assertTrue(oldRow == newRow);
 
-<<<<<<< HEAD
-        assertTrue(board.getGameBoard()[newCol][newRow] instanceof  Shooter);
-=======
         assertTrue(board.getGameBoard()[newCol][newRow] instanceof Shooter);
->>>>>>> 497130ec95d401d2fb732131532295d4d2e40f52
         assertTrue(board.getGameBoard()[oldCol][oldRow] instanceof Empty);
     }
 

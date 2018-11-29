@@ -368,4 +368,7 @@ class GameBoard extends JComponent {
         }
         return bottowRowAliens;
     }
+    Entity[][] getGameBoard() {
+        return gameBoard;
+    }
 }
