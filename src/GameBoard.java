@@ -297,7 +297,7 @@ class GameBoard extends JComponent {
         for (Alien alien : aliens) {
             rows.add(alien.getRow());
         }
-        if (rows.contains(BOARD_ROWS - 1) || allAliensDead()) {
+        if (rows.contains(BOARD_ROWS - 2) || allAliensDead()) {
             over = true;
         }
         return over;
