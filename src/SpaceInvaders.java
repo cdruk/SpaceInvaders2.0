@@ -42,22 +42,14 @@ public class SpaceInvaders extends JFrame {
     }
 
     private void startWar() {
-        ActionListener warOneListener = e -> {
-            gameBoard.war("odd");
+
+        ActionListener warListener = e -> {
+            gameBoard.war();
             setTitle(title);
         };
-        Timer warTimerOne = new Timer(1000, warOneListener);
+        Timer warTimerOne = new Timer(1000, warListener);
         warTimerOne.setRepeats(true);
         warTimerOne.start();
-
-        ActionListener warTwoListener = e -> {
-            gameBoard.war("even");
-            setTitle(title);
-        };
-        Timer warTimerTwo = new Timer(2000, warTwoListener);
-        warTimerTwo.setRepeats(true);
-        warTimerTwo.start();
-
     }
 
 
