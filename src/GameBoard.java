@@ -124,7 +124,6 @@ class GameBoard extends JComponent {
                 }
             }
             this.gameBoard = newGrid;
-
         }
         return newDir;
     }
