@@ -73,7 +73,7 @@ public class SpaceInvaders extends JFrame {
     }
 
     private void stopGame() {
-
+        setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
         timer.stop();
         warTimer.stop();
         gameBoard = null;
