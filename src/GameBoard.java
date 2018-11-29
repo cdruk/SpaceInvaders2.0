@@ -301,7 +301,7 @@ class GameBoard extends JComponent {
                 repaint();
                 if (shooter.getCol() == alienProjectile.getCol() && shooter.getRow() == alienRow) {
                     alienShooting = false;
-                    if (shooter.getLives() != 0) {
+                    if (shooter.getLives() != 1) {
                         shooter.setLives(shooter.getLives() - 1);
                     } else {
                         noMoreLives = true;

@@ -19,20 +19,20 @@ public class SpaceInvaders extends JFrame {
     Timer warTimer;
 
     private SpaceInvaders() {
+        title = "Space Invaders - Score: ";
+        lives = "               Lives: ";
         gameBoard = new GameBoard(SQUARE_SIZE);
         gameBoard.setBackground(Color.black);
         int canvasWidth = SQUARE_SIZE * gameBoard.BOARD_COLS;
         int canvasHeight = SQUARE_SIZE * gameBoard.BOARD_ROWS;
         setWindowProperties(canvasWidth, canvasHeight + 10);
         JComponent mainPanel = gameBoard;
-        title = "Space Invaders - Score: ";
-        lives = "               Lives: ";
         add(mainPanel);
         addKeyListener(new MyKeyAdapter());
         runGame();
-//        if (gameBoard.isGameOver()){
-//            stopGame();
-//        }
+        if (gameBoard.isGameOver()){
+            gameBoard = null;
+        }
     }
 
 
@@ -47,7 +47,7 @@ public class SpaceInvaders extends JFrame {
         timer.setRepeats(true);
         timer.start();
 
-       while(!gameBoard.isGameOver()) startWar();
+        startWar();
     }
 
     private void startWar() {
