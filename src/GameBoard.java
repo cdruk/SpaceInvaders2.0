@@ -18,7 +18,7 @@ class GameBoard extends JComponent {
     final int BOARD_ROWS = 12;
     final int BOARD_COLS = 15;
     Direction movement;
-    Graphics2D g;
+    private Graphics2D g;
     private Image alienPic;
     private Image shooterPic;
     private int allAliens;
@@ -249,25 +249,31 @@ class GameBoard extends JComponent {
         if (entity.getClass() == Shooter.class) {
             shooterRow = BOARD_ROWS - 1;
             shooterCol = shooter.getCol();
+            ArrayList<Integer> columns = new ArrayList<>();
+            for (Alien alien : aliens) {
+                columns.add(alien.getCol());
+            }
 
-            ActionListener advanceProjListener = e -> {
-                shooterRow--;
-                shooterProjectile = new Projectile(shooterCol, shooterRow);
-                shooterShooting = true;
-                repaint();
-                if (removeAlienIfShot(shooterCol, shooterRow)) {
-                    shooterShooting = false;
-                    shooterProjectile = null;
-                    shooterShotTimer.stop();
-                    if (isGameOver()) {
-                        exit();
+            if (columns.contains(shooterCol)) {
+                ActionListener advanceProjListener = e -> {
+                    shooterRow--;
+                    shooterProjectile = new Projectile(shooterCol, shooterRow);
+                    shooterShooting = true;
+                    repaint();
+                    if (removeAlienIfShot(shooterCol, shooterRow)) {
+                        shooterShooting = false;
+                        shooterProjectile = null;
+                        shooterShotTimer.stop();
+                        if (isGameOver()) {
+                            exit();
+                        }
                     }
-                }
-                repaint();
-            };
-            shooterShotTimer = new Timer(10, advanceProjListener);
-            shooterShotTimer.setRepeats(true);
-            shooterShotTimer.start();
+                    repaint();
+                };
+                shooterShotTimer = new Timer(10, advanceProjListener);
+                shooterShotTimer.setRepeats(true);
+                shooterShotTimer.start();
+            }
 
         } else if (entity.getClass() == Alien.class) {
             shootingAlien = (Alien) entity;
