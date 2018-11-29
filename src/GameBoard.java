@@ -18,6 +18,7 @@ class GameBoard extends JComponent {
     final int BOARD_ROWS = 12;
     final int BOARD_COLS = 15;
     Direction movement;
+    private Graphics2D g;
     private boolean shooting;
     private Image alienPic;
     private Image shooterPic;
@@ -141,7 +142,7 @@ class GameBoard extends JComponent {
 
     @Override
     public void paintComponent(Graphics graphics) {
-        Graphics2D g = (Graphics2D) graphics;
+        g = (Graphics2D) graphics;
         g.setColor(Color.black);
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         paintAliens(g);
@@ -167,19 +168,11 @@ class GameBoard extends JComponent {
                 for (int row = 0; row < BOARD_ROWS; row++) {
                     Entity entity = gameBoard[col][row];
                     g.fillRect(entity.getCol() * cellSize, entity.getRow() * cellSize, cellSize, cellSize);
-
                 }
             }
-            if (gameWon()) {
                 g.setColor(Color.WHITE);
-                g.drawString(endMessage, (BOARD_COLS/2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage)/2), BOARD_ROWS/2 * cellSize);
-
-            }
-            if (gameLost()) {
-                g.setColor(Color.WHITE);
-                g.drawString(endMessage, (BOARD_COLS/2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage)/2), BOARD_ROWS/2 * cellSize);
-
-            }
+                g.drawString(endMessage,
+                        (BOARD_COLS/2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage)/2), BOARD_ROWS/2 * cellSize);
         }
     }
 
@@ -308,7 +301,7 @@ class GameBoard extends JComponent {
     }
 
 
-    boolean isGameOver() {
+    public boolean isGameOver() {
         if (gameLost()|| gameWon()){
             gameOver = true;
         }
@@ -335,7 +328,7 @@ class GameBoard extends JComponent {
 
     private boolean gameWon() {
         boolean over = false;
-        if (allAliens == deadAliens) {
+        if (allAliens == deadAliens && !noMoreLives) {
             over = true;
             endMessage = "You Win. \n Score = " + score;
         }
