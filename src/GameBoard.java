@@ -221,14 +221,11 @@ class GameBoard extends JComponent {
                 Entity entity = gameBoard[col][row];
                 if (entity instanceof Alien) {
                     Alien alien = (Alien) entity;
-                    shooting = true;
                     if (projectile.getCol() == alien.getCol() && projectile.getRow() == alien.getRow()) {
-                        alien.setAlive(false);
                         deadAliens++;
                         aliens.remove(alien);
                         score += 10;
                         gameBoard[col][row] = new Empty(col, row);
-                        repaint();
                         return true;
                     }
                 }
@@ -242,7 +239,7 @@ class GameBoard extends JComponent {
         g.setColor(Color.GREEN);
         g.drawLine((shooter.getCol() * cellSize) + cellSize / 2,
                 (shooter.getRow() * cellSize) + cellSize / 2,
-                (projectile.getCol() * cellSize) + cellSize / 2,
+                (shooter.getCol() * cellSize) + cellSize / 2,
                 (projectile.getRow() * cellSize) + cellSize / 2);
         sleep();
 
@@ -251,7 +248,10 @@ class GameBoard extends JComponent {
     void shoot() {
         for (int loc = BOARD_ROWS - 1; loc >= 0; loc--) {
             projectile = new Projectile(shooter.getCol(), loc);
+            shooting = true;
+            repaint();
             if (removeAlienIfShot()) {
+                repaint();
                 if (isGameOver()) {
                     exit();
                 }
