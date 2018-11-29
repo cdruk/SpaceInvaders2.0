@@ -2,7 +2,6 @@ import entities.Direction;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -41,9 +40,14 @@ public class SpaceInvaders extends JFrame {
         alienDir = Direction.RIGHT;
         ActionListener moveListener = e -> {
             alienDir = gameBoard.moveAliens(alienDir);
+            if(gameBoard.isGameOver()){
+                gameBoard.exit();
+            }
             repaint();
         };
-        timer = new Timer(500, moveListener);
+
+        timer = new Timer(950  , moveListener);
+
         timer.setRepeats(true);
         timer.start();
 
@@ -55,7 +59,12 @@ public class SpaceInvaders extends JFrame {
         ActionListener warListener = e -> {
             gameBoard.war();
             setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
+            alienDir = gameBoard.moveAliens(alienDir);
+            if(gameBoard.isGameOver()){
+                gameBoard.exit();
+            }
         };
+
         warTimer = new Timer(1000, warListener);
         warTimer.setRepeats(true);
         warTimer.start();
@@ -64,6 +73,7 @@ public class SpaceInvaders extends JFrame {
     private void stopGame() {
         timer.stop();
         warTimer.stop();
+
     }
 
     @Override
@@ -93,7 +103,7 @@ public class SpaceInvaders extends JFrame {
                 gameBoard.movement = Direction.RIGHT;
                 gameBoard.moveShooter();
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
-                gameBoard.shoot(gameBoard.getShooter());
+                gameBoard.shooterShoot(gameBoard.getShooter());
                 repaint();
                 setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives() );
             }
