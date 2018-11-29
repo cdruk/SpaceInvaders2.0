@@ -1,4 +1,4 @@
-import org.junit.Assert;
+import entities.*;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertTrue;
@@ -34,7 +34,7 @@ public class GameBoardTest {
         assertTrue(oldRow == newRow);
 
         assertTrue(board.getGameBoard()[newCol][newRow] instanceof  Shooter);
-        assertTrue(board.getGameBoard()[oldCol][oldRow] instanceof  Empty);
+        assertTrue(board.getGameBoard()[oldCol][oldRow] instanceof Empty);
     }
 
 }

@@ -1,4 +1,5 @@
-import java.awt.*;
+package entities;
+
 
 public abstract class Entity {
     private int col;

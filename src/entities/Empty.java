@@ -1,4 +1,4 @@
-import java.awt.*;
+package entities;
 
 public class Empty extends Entity {
 

@@ -1,3 +1,5 @@
+import entities.*;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -32,8 +34,8 @@ class GameBoard extends JComponent {
     GameBoard(int cellSize) {
         gameBoard = new Entity[BOARD_COLS][BOARD_ROWS];
         this.cellSize = cellSize;
-        alienPic = createAlienPic();
-        shooterPic = createShooterPic();
+        alienPic = new ImageCreator().createAlienPic(cellSize);
+        shooterPic = new ImageCreator().createShooterPic();
         generateGameBoard();
         generateAliens();
         generateShooter();
@@ -280,36 +282,6 @@ class GameBoard extends JComponent {
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
-    }
-
-
-    private Image createAlienPic() {
-        File imageFile = new File("alien.jpg");
-        try {
-            return resize(ImageIO.read(imageFile), cellSize, cellSize);
-        } catch (IOException e) {
-            System.out.println("Image not found.");
-        }
-        return null;
-    }
-
-    private Image createShooterPic() {
-        File icon = new File("shooter.jpg");
-        try {
-            return ImageIO.read(icon);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private static BufferedImage resize(BufferedImage img, int height, int width) {
-        Image tmp = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
-        BufferedImage resized = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2d = resized.createGraphics();
-        g2d.drawImage(tmp, 0, 0, null);
-        g2d.dispose();
-        return resized;
     }
 
     Shooter getShooter() {
