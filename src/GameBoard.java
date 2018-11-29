@@ -1,20 +1,18 @@
 import entities.*;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
+
 
 class GameBoard extends JComponent {
     protected int cellSize;
     private Shooter shooter;
     private Projectile projectile;
+    private Projectile alienProjectile;
     private int score = 0;
     private ArrayList<Alien> aliens;
     private Entity[][] gameBoard;
@@ -23,9 +21,7 @@ class GameBoard extends JComponent {
     Direction movement;
     Graphics2D g;
     private boolean shooting;
-	public boolean alienShooting;
-	private Projectile alienProjectile;
-	private Image alienPic;
+    private Image alienPic;
     private Image shooterPic;
     private int allAliens;
     private int deadAliens;
@@ -46,7 +42,8 @@ class GameBoard extends JComponent {
         generateAliens();
         generateShooter();
     }
-    public Entity[][] getGameBoard() {
+
+    Entity[][] getGameBoard() {
         return gameBoard;
     }
 
@@ -70,60 +67,8 @@ class GameBoard extends JComponent {
             }
         }
     }
-	void alienShoot()
-	{
-        ArrayList<Alien> bottomRowAliens = getBottomRowAliens();
-        Collections.shuffle(bottomRowAliens);
-		int columnShootFrom = bottomRowAliens.get(0).getCol();
-		int rowShootFrom = bottomRowAliens.get(0).getRow();
-		ActionListener shootFromAlien = e ->
-		{
-			int alienShotRow = rowShootFrom;
-			alienShotRow++;
-			alienProjectile = new Projectile(columnShootFrom, alienShotRow);
-			alienShooting = true;
-			repaint();
-			if (alienShotRow == shooter.getRow())
-			{
-				shooter.setLives(shooter.getLives() - 1);
-			}
-		};
-		Timer timer = new Timer(1000, shootFromAlien);
-		timer.setRepeats(true);
-		timer.start();
-	}
 
-    private ArrayList<Alien> getBottomRowAliens()
-    {
-        ArrayList<Alien> bottowRowAliens = new ArrayList<>();
-
-        for (int col = 0; col < BOARD_COLS; col++)
-        {
-            for (int row = 0; row < BOARD_ROWS; row++)
-            {
-                if (gameBoard[col][row].getClass() == Alien.class)
-                {
-                    if (gameBoard[col][row + 1].getClass() == Empty.class || gameBoard[col][row + 1].getClass() == Shooter.class)
-                    {
-                        bottowRowAliens.add((Alien) gameBoard[col][row]);
-                    }
-                }
-            }
-        }
-        return bottowRowAliens;
-    }
-
-    void paintAlienShot(Graphics2D g)
-	{
-		g.setColor(Color.WHITE);
-		g.drawLine((alienProjectile.getCol() * cellSize) + cellSize / 2,
-				(alienProjectile.getRow() * cellSize) + cellSize / 2,
-				(alienProjectile.getCol() * cellSize) + cellSize / 2,
-				((alienProjectile.getRow() + 1) * cellSize) + cellSize / 2);
-	}
-
-
-	Direction moveAliens(Direction dir) {
+    Direction moveAliens(Direction dir) {
         Direction newDir = dir;
         HashSet<Integer> columns = new HashSet<>();
         for (Alien alien : aliens) {
@@ -218,13 +163,11 @@ class GameBoard extends JComponent {
             }
         }
         if (shooting) {
-            paintShot(g);
+            paintShot(g, shooter);
         }
-
-		if (alienShooting)
-		{
-			paintAlienShot(g);
-		}
+        if (alienShooting) {
+            paintShot(g, shootingAlien);
+        }
     }
 
     private void paintAliens(Graphics2D g) {
@@ -241,28 +184,18 @@ class GameBoard extends JComponent {
 
     void moveShooter() {
         Entity empty = new Empty(shooter.getCol(), shooter.getRow());
-        if (movement == Direction.LEFT && !atLeftBounds()) {
+        if (movement == Direction.LEFT && !shooter.atLeftBounds()) {
             gameBoard[shooter.getCol()][shooter.getRow()] = empty;
             shooter.setCol(shooter.getCol() - 1);
             gameBoard[shooter.getCol()][shooter.getRow()] = shooter;
 
-        } else if (movement == Direction.RIGHT && !atRightBounds()) {
+        } else if (movement == Direction.RIGHT && !shooter.atRightBounds(BOARD_COLS)) {
             gameBoard[shooter.getCol()][shooter.getRow()] = empty;
             shooter.setCol(shooter.getCol() + 1);
             gameBoard[shooter.getCol()][shooter.getRow()] = shooter;
         }
         repaint();
     }
-
-
-    private boolean atLeftBounds() {
-        return shooter.getCol() == 0;
-    }
-
-    private boolean atRightBounds() {
-        return shooter.getCol() == BOARD_COLS - 1;
-    }
-
 
     private void exit() {
         System.out.println("Final Score: " + getScore());
@@ -294,26 +227,69 @@ class GameBoard extends JComponent {
     }
 
 
-    private void paintShot(Graphics2D g) {
-        g.setColor(Color.GREEN);
-        g.drawLine((shooter.getCol() * cellSize) + cellSize / 2,
-                (shooter.getRow() * cellSize) + cellSize / 2,
-                (shooter.getCol() * cellSize) + cellSize / 2,
-                (projectile.getRow() * cellSize) + cellSize / 2);
+    private void paintShot(Graphics2D g, Entity entity) {
+        if (entity instanceof Shooter) {
+            g.setColor(Color.GREEN);
+            g.drawLine((shooter.getCol() * cellSize) + cellSize / 2,
+                    (shooter.getRow() * cellSize) + cellSize / 2,
+                    (shooter.getCol() * cellSize) + cellSize / 2,
+                    (projectile.getRow() * cellSize) + cellSize / 2);
+        }
+        if (entity instanceof Alien) {
+            g.setColor(Color.YELLOW);
+            g.drawLine((alienProjectile.getCol() * cellSize) + cellSize / 2,
+                    ((alienProjectile.getRow() - 1) * cellSize) + cellSize / 2,
+                    (alienProjectile.getCol() * cellSize) + cellSize / 2,
+                    (alienProjectile.getRow() * cellSize) + cellSize / 2);
+
+        }
     }
 
-    void shoot() {
-        for (int loc = BOARD_ROWS - 1; loc >= 0; loc--) {
-            projectile = new Projectile(shooter.getCol(), loc);
-            shooting = true;
-            repaint();
-            if (removeAlienIfShot()) {
+    private int alienRow;
+    private boolean alienShooting;
+    private Timer alienShotTimer;
+    private Alien shootingAlien;
+
+    void shoot(Entity entity) {
+        if (entity instanceof Shooter) {
+            for (int loc = BOARD_ROWS - 1; loc >= 0; loc--) {
+                projectile = new Projectile(shooter.getCol(), loc);
+                shooting = true;
                 repaint();
-                if (isGameOver()) {
-                    exit();
+                if (removeAlienIfShot()) {
+                    repaint();
+                    if (isGameOver()) {
+                        exit();
+                    }
+                    break;
                 }
-                break;
             }
+        } else if (entity instanceof Alien) {
+            shootingAlien = (Alien) entity;
+            alienProjectile = new Projectile(shootingAlien.getCol(), shootingAlien.getRow());
+            alienRow = shootingAlien.getRow();
+            ActionListener moveAlienShotDownListener = e -> {
+                alienRow++;
+                alienProjectile = new Projectile(shootingAlien.getCol(), alienRow);
+                alienShooting = true;
+                repaint();
+                if (shooter.getCol() == alienProjectile.getCol() && shooter.getRow() == alienRow) {
+                    alienShooting = false;
+                    if (shooter.getLives() != 0) {
+                        shooter.setLives(shooter.getLives() - 1);
+                    } else {
+                        exit();
+                    }
+                } else if (alienRow == BOARD_ROWS - 1) {
+                    alienShooting = false;
+                    alienShotTimer.stop();
+                    alienProjectile = null;
+                }
+                repaint();
+            };
+            alienShotTimer = new Timer(80, moveAlienShotDownListener);
+            alienShotTimer.setRepeats(true);
+            alienShotTimer.start();
         }
     }
 
@@ -335,5 +311,52 @@ class GameBoard extends JComponent {
 
     Shooter getShooter() {
         return shooter;
+    }
+
+    void war(String whichAliens) {
+        Random ran = new Random();
+        ArrayList<Integer> rows = new ArrayList<>();
+        ArrayList<Alien> maxRows = new ArrayList<>();
+        for (Alien alien : aliens) {
+            rows.add(alien.getRow());
+        }
+        int maxRow = Collections.max(rows);
+
+        for (Alien alien : aliens) {
+            if (alien.getRow() == maxRow) {
+                maxRows.add(alien);
+            }
+        }
+
+        ArrayList<Alien> evenAliens = new ArrayList<>();
+        ArrayList<Alien> oddAliens = new ArrayList<>();
+        ArrayList<Integer> evenAlienColumns = new ArrayList<>();
+        ArrayList<Integer> oddAlienColumns = new ArrayList<>();
+        for (Alien alien : maxRows) {
+            if (alien.getCol() % 2 == 0) {
+                evenAliens.add(alien);
+                evenAlienColumns.add(alien.getCol());
+            } else {
+                oddAliens.add(alien);
+                oddAlienColumns.add(alien.getCol());
+            }
+        }
+        Alien shootingAlien = null;
+        if (whichAliens.equals("even")) {
+            while (shootingAlien == null) {
+                int col = ran.nextInt(Collections.max(evenAlienColumns));
+                if (evenAlienColumns.contains(col)) {
+                    shootingAlien = aliens.get(getAlienInt(col, maxRow));
+                }
+            }
+        } else {
+            while (shootingAlien == null) {
+                int col = ran.nextInt(Collections.max(oddAlienColumns));
+                if (oddAlienColumns.contains(col)) {
+                    shootingAlien = aliens.get(getAlienInt(col, maxRow));
+                }
+            }
+        }
+        shoot(shootingAlien);
     }
 }
