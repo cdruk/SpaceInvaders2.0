@@ -2,6 +2,7 @@ import entities.Direction;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -31,9 +32,36 @@ public class SpaceInvaders extends JFrame {
             alienDir = gameBoard.moveAliens(alienDir);
             repaint();
         };
-        Timer timer = new Timer(1000, moveListener);
+        Timer timer = new Timer(500, moveListener);
         timer.setRepeats(true);
         timer.start();
+
+        startWar();
+    }
+
+    private void startWar() {
+        ActionListener warOneListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gameBoard.war("odd");
+                setTitle("Space Invaders - Score: " + gameBoard.getScore() + "          -Lives: " + gameBoard.getShooter().getLives());
+            }
+        };
+        Timer warTimerOne = new Timer(1000, warOneListener);
+        warTimerOne.setRepeats(true);
+        warTimerOne.start();
+
+        ActionListener warTwoListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                gameBoard.war("even");
+                setTitle("Space Invaders - Score: " + gameBoard.getScore() + "          -Lives: " + gameBoard.getShooter().getLives());
+            }
+        };
+        Timer warTimerTwo = new Timer(2000, warTwoListener);
+        warTimerTwo.setRepeats(true);
+        warTimerTwo.start();
+
     }
 
 
@@ -45,7 +73,7 @@ public class SpaceInvaders extends JFrame {
 
     private void setWindowProperties(int width, int height) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Space Invaders - Score: " + gameBoard.getScore());
+        setTitle("Space Invaders - Score: " + gameBoard.getScore() + "          -Lives: " + gameBoard.getShooter().getLives());
         setSize(width, height);
         setResizable(false);
         setVisible(true);
@@ -64,9 +92,9 @@ public class SpaceInvaders extends JFrame {
                 gameBoard.movement = Direction.RIGHT;
                 gameBoard.moveShooter();
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
-                gameBoard.shoot();
+                gameBoard.shoot(gameBoard.getShooter());
                 repaint();
-                setTitle("Space Invaders - Score: " + gameBoard.getScore());
+                setTitle("Space Invaders - Score: " + gameBoard.getScore() + "          -Lives: " + gameBoard.getShooter().getLives());
             }
 
         }
