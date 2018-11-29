@@ -220,17 +220,9 @@ class GameBoard extends JComponent {
         repaint();
     }
 
-
-//    private void exit() {
-//        System.out.println("Final Score: " + getScore());
-//        System.exit(0);
-//    }
-
-
     int getScore() {
         return score;
     }
-
 
     private boolean removeAlienIfShot() {
         for (int col = 0; col < BOARD_COLS; col++) {
@@ -300,8 +292,10 @@ class GameBoard extends JComponent {
                     alienShooting = false;
                     if (shooter.getLives() != 1) {
                         shooter.setLives(shooter.getLives() - 1);
+                        score -= 20;
                     } else {
                         shooter.setLives(shooter.getLives() - 1);
+                        score -= 20;
                         noMoreLives = true;
                     }
                 } else if (alienRow == BOARD_ROWS - 1) {
