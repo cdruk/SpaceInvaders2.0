@@ -188,7 +188,6 @@ class GameBoard extends JComponent {
             if (gameLost()) {
                 g.setColor(Color.WHITE);
                 g.drawString(endMessage, (BOARD_COLS/2 * cellSize) - (g.getFontMetrics().stringWidth(endMessage)/2), BOARD_ROWS/2 * cellSize);
-
             }
         }
     }
@@ -202,7 +201,6 @@ class GameBoard extends JComponent {
 
     private void paintShooter(Graphics2D g) {
         g.drawImage(shooterPic, shooter.getCol() * cellSize, shooter.getRow() * cellSize, null);
-
     }
 
     void moveShooter() {
