@@ -38,7 +38,7 @@ public class SpaceInvaders extends JFrame {
             }
             repaint();
         };
-        Timer timer = new Timer(950  , moveListener);
+        Timer timer = new Timer(750, moveListener);
         timer.setRepeats(true);
         timer.start();
 
@@ -50,10 +50,6 @@ public class SpaceInvaders extends JFrame {
         ActionListener warListener = e -> {
             gameBoard.war();
             setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
-            alienDir = gameBoard.moveAliens(alienDir);
-            if(gameBoard.isGameOver()){
-                gameBoard.exit();
-            }
         };
 
         Timer warTimerOne = new Timer(1000, warListener);
@@ -79,14 +75,16 @@ public class SpaceInvaders extends JFrame {
     private class MyKeyAdapter extends KeyAdapter {
 
         @Override
-        public void keyPressed(KeyEvent keyEvent) {
+        public void keyReleased(KeyEvent keyEvent) {
 
             if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
                 gameBoard.movement = Direction.LEFT;
                 gameBoard.moveShooter();
+                repaint();
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
                 gameBoard.movement = Direction.RIGHT;
                 gameBoard.moveShooter();
+                repaint();
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
                 gameBoard.shooterShoot(gameBoard.getShooter());
                 repaint();

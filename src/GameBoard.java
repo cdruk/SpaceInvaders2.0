@@ -8,18 +8,17 @@ import java.util.*;
 
 
 class GameBoard extends JComponent {
-    protected int cellSize;
+    private int cellSize;
     private Shooter shooter;
     private Projectile shooterProjectile;
     private Projectile alienProjectile;
     private int score = 0;
     private ArrayList<Alien> aliens;
     private Entity[][] gameBoard;
-    public final int BOARD_ROWS = 12;
-    public final int BOARD_COLS = 15;
+    final int BOARD_ROWS = 12;
+    final int BOARD_COLS = 15;
     Direction movement;
     Graphics2D g;
-    private boolean shooting;
     private Image alienPic;
     private Image shooterPic;
     private int allAliens;
@@ -161,7 +160,7 @@ class GameBoard extends JComponent {
                 }
             }
         }
-        if (shooting) {
+        if (shooterShooting) {
             paintShot(g, shooter);
         }
         if (alienShooting) {
@@ -205,32 +204,28 @@ class GameBoard extends JComponent {
     }
 
 
-    private boolean removeAlienIfShot() {
-        for (int col = 0; col < BOARD_COLS; col++) {
-            for (int row = 0; row < BOARD_ROWS; row++) {
-                Entity entity = gameBoard[col][row];
-                if (entity.getClass() == Alien.class) {
-                    Alien alien = (Alien) entity;
-                    if (shooterProjectile.getCol() == alien.getCol() && shooterProjectile.getRow() == alien.getRow()) {
-                        deadAliens++;
-                        aliens.remove(alien);
-                        score += 10;
-                        gameBoard[col][row] = new Empty(col, row);
-                        return true;
-                    }
-                }
+    private boolean removeAlienIfShot(int col, int row) {
+        for (Alien alien : aliens) {
+            if (col == alien.getCol() && row == alien.getRow()) {
+                alien.setAlive(false);
+                deadAliens++;
+                aliens.remove(alien);
+                score += 10;
+                gameBoard[alien.getCol()][alien.getRow()] = new Empty(alien.getCol(), alien.getRow());
+                return true;
             }
         }
+
         return false;
     }
 
     private void paintShot(Graphics2D g, Entity entity) {
         if (entity.getClass() == Shooter.class) {
             g.setColor(Color.GREEN);
-            g.drawLine((shooter.getCol() * cellSize) + cellSize / 2,
-                    (shooter.getRow() * cellSize) + cellSize / 2,
-                    (shooter.getCol() * cellSize) + cellSize / 2,
-                    (shooterProjectile.getRow() * cellSize) + cellSize / 2);
+            g.drawLine((shooterProjectile.getCol() * cellSize) + cellSize / 2,
+                    shooterProjectile.getRow() * cellSize,
+                    (shooterProjectile.getCol() * cellSize) + cellSize / 2,
+                    (shooterProjectile.getRow() - 1) * cellSize);
         }
         if (entity.getClass() == Alien.class) {
             g.setColor(Color.YELLOW);
@@ -243,23 +238,37 @@ class GameBoard extends JComponent {
 
     private int alienRow;
     private boolean alienShooting;
+    private boolean shooterShooting;
     private Timer alienShotTimer;
+    private Timer shooterShotTimer;
     private Alien shootingAlien;
+    private int shooterRow;
+    private int shooterCol;
 
     void shooterShoot(Entity entity) {
         if (entity.getClass() == Shooter.class) {
-            for (int loc = BOARD_ROWS - 1; loc >= 0; loc--) {
-                shooterProjectile = new Projectile(shooter.getCol(), loc);
-                shooting = true;
+            shooterRow = BOARD_ROWS - 1;
+            shooterCol = shooter.getCol();
+
+            ActionListener advanceProjListener = e -> {
+                shooterRow--;
+                shooterProjectile = new Projectile(shooterCol, shooterRow);
+                shooterShooting = true;
                 repaint();
-                if (removeAlienIfShot()) {
-                    repaint();
+                if (removeAlienIfShot(shooterCol, shooterRow)) {
+                    shooterShooting = false;
+                    shooterProjectile = null;
+                    shooterShotTimer.stop();
                     if (isGameOver()) {
                         exit();
                     }
-                    break;
                 }
-            }
+                repaint();
+            };
+            shooterShotTimer = new Timer(10, advanceProjListener);
+            shooterShotTimer.setRepeats(true);
+            shooterShotTimer.start();
+
         } else if (entity.getClass() == Alien.class) {
             shootingAlien = (Alien) entity;
             alienProjectile = new Projectile(shootingAlien.getCol(), shootingAlien.getRow());
@@ -312,13 +321,10 @@ class GameBoard extends JComponent {
     void war() {
         ArrayList<Alien> aliens = getBottomRowAliens();
         ArrayList<Integer> possibleCols = new ArrayList<>();
-        for(int i = 0; i < 10; i++)
-        {
-            for(Alien alien : aliens)
-            {
+        for (int i = 0; i < 10; i++) {
+            for (Alien alien : aliens) {
                 int col = alien.getCol();
-                if(!possibleCols.contains(col))
-                {
+                if (!possibleCols.contains(col)) {
                     possibleCols.add(col);
                 }
             }
@@ -327,22 +333,17 @@ class GameBoard extends JComponent {
         int randomAlien = random.nextInt(possibleCols.size());
         Collections.shuffle(aliens);
         Collections.shuffle(possibleCols);
-        shootingAlien = aliens.get( randomAlien);
+        shootingAlien = aliens.get(randomAlien);
         shooterShoot(shootingAlien);
     }
 
-    private ArrayList<Alien> getBottomRowAliens()
-    {
+    private ArrayList<Alien> getBottomRowAliens() {
         ArrayList<Alien> bottowRowAliens = new ArrayList<>();
 
-        for (int col = 0; col < BOARD_COLS; col++)
-        {
-            for (int row = 0; row < BOARD_ROWS; row++)
-            {
-                if (gameBoard[col][row].getClass() == Alien.class)
-                {
-                    if (gameBoard[col][row + 1].getClass() == Empty.class || gameBoard[col][row + 1].getClass() == Shooter.class)
-                    {
+        for (int col = 0; col < BOARD_COLS; col++) {
+            for (int row = 0; row < BOARD_ROWS; row++) {
+                if (gameBoard[col][row].getClass() == Alien.class) {
+                    if (gameBoard[col][row + 1].getClass() == Empty.class || gameBoard[col][row + 1].getClass() == Shooter.class) {
                         bottowRowAliens.add((Alien) gameBoard[col][row]);
                     }
                 }
