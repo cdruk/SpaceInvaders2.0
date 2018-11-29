@@ -1,6 +1,8 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -8,22 +10,22 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 class GameBoard extends JComponent {
-    protected int cellSize;
+    private int cellSize;
     private Shooter shooter;
-    private Projectile projectile;
+    private Projectile shooterProjectile;
     private int score = 0;
     private ArrayList<Alien> aliens;
+    private Graphics2D g;
 
-    public Entity[][] getGameBoard() {
+    Entity[][] getGameBoard() {
         return gameBoard;
     }
 
     private Entity[][] gameBoard;
-    public final int BOARD_ROWS = 12;
-    public final int BOARD_COLS = 15;
-    public Direction movement;
-    Graphics2D g;
-    public boolean shooting;
+    final int BOARD_ROWS = 12;
+    final int BOARD_COLS = 15;
+    Direction movement;
+    private boolean shooterShooting;
     private Image alienPic;
     private Image shooterPic;
     private int allAliens;
@@ -70,8 +72,10 @@ class GameBoard extends JComponent {
     Direction moveAliens(Direction dir) {
         Direction newDir = dir;
         HashSet<Integer> columns = new HashSet<>();
+        ArrayList<Alien> oldAliens = new ArrayList<>();
         for (Alien alien : aliens) {
             columns.add(alien.getCol());
+            oldAliens.add(alien);
         }
 
         Entity[][] oldGrid = gameBoard;
@@ -86,40 +90,40 @@ class GameBoard extends JComponent {
             for (int j = 0; j < BOARD_COLS; j++) {
                 Entity current = oldGrid[j][i];
                 if (current instanceof Alien) {
-                if (dir == Direction.LEFT) {
-                    if (!columns.contains(0)) {
+                    if (dir == Direction.LEFT) {
+                        if (!columns.contains(0)) {
                             int currentCol = current.getCol();
                             int currentRow = current.getRow();
-                            int index = getAlienInt(currentCol, currentRow);
-                            aliens.get(index).setCol(currentCol -1);
+                            int index = getAlienInt(oldAliens, currentCol, currentRow);
+                            aliens.get(index).setCol(currentCol - 1);
                             newGrid[currentCol - 1][currentRow] = aliens.get(index);
                         }
 
-                    if (columns.contains(1)) {
-                        newDir = Direction.RIGHT;
-                    }
-                } else {
+                        if (columns.contains(1)) {
+                            newDir = Direction.RIGHT;
+                        }
+                    } else {
                         if (!columns.contains(BOARD_COLS - 1)) {
                             int currentCol = current.getCol();
                             int currentRow = current.getRow();
-                            int index = getAlienInt(currentCol, currentRow);
+                            int index = getAlienInt(oldAliens, currentCol, currentRow);
                             aliens.get(index).setCol(currentCol + 1);
                             newGrid[currentCol + 1][currentRow] = aliens.get(index);
 
-                    } else {
+                        } else {
                             int currentRow = current.getRow();
                             int currentCol = current.getCol();
-                            int index = getAlienInt(currentCol, currentRow);
+                            int index = getAlienInt(oldAliens, currentCol, currentRow);
                             aliens.get(index).setRow(currentRow + 1);
                             newGrid[currentCol][currentRow + 1] = aliens.get(index);
                             newDir = Direction.LEFT;
                         }
                     }
 
-                }else if(current instanceof Projectile){
+                } else if (current instanceof Projectile) {
                     Projectile proj = new Projectile(current.getCol(), current.getRow());
                     newGrid[j][i] = proj;
-                }else if(current instanceof Shooter){
+                } else if (current instanceof Shooter) {
                     Shooter shoot = new Shooter(current.getCol(), current.getRow());
                     newGrid[j][i] = shoot;
                 }
@@ -130,10 +134,10 @@ class GameBoard extends JComponent {
         return newDir;
     }
 
-    private int getAlienInt(int currentCol, int currentRow) {
+    private int getAlienInt(ArrayList<Alien> oldAliens,int currentCol, int currentRow) {
         int index = 0;
-        for(int i = 0; i < aliens.size(); i++){
-            if(aliens.get(i).getCol() == currentCol && aliens.get(i).getRow() == currentRow) {
+        for (int i = 0; i < oldAliens.size(); i++) {
+            if (oldAliens.get(i).getCol() == currentCol && oldAliens.get(i).getRow() == currentRow) {
                 index = i;
             }
         }
@@ -161,8 +165,8 @@ class GameBoard extends JComponent {
                 }
             }
         }
-        if (shooting) {
-            paintShot(g);
+        if (shooterShooting) {
+            paintShot(g, shooter);
         }
     }
 
@@ -213,49 +217,68 @@ class GameBoard extends JComponent {
     }
 
 
-    private boolean removeAlienIfShot() {
-        for (int col = 0; col < BOARD_COLS; col++) {
-            for (int row = 0; row < BOARD_ROWS; row++) {
-                Entity entity = gameBoard[col][row];
-                if (entity instanceof Alien) {
-                    Alien alien = (Alien) entity;
-                    shooting = true;
-                    if (projectile.getCol() == alien.getCol() && projectile.getRow() == alien.getRow()) {
-                        alien.setAlive(false);
-                        deadAliens++;
-                        aliens.remove(alien);
-                        score += 10;
-                        gameBoard[col][row] = new Empty(col, row);
-                        repaint();
-                        return true;
-                    }
-                }
+    private boolean removeAlienIfShot(int col, int row) {
+        for (Alien alien : aliens) {
+            if (col == alien.getCol() && row == alien.getRow()) {
+                shooterProjectile = null;
+                shooterShooting = false;
+                timer.removeActionListener(advanceProjListener);
+                repaint();
+                alien.setAlive(false);
+                deadAliens++;
+                aliens.remove(alien);
+                score += 10;
+                gameBoard[alien.getCol()][alien.getRow()] = new Empty(alien.getCol(), alien.getRow());
+                return true;
             }
         }
+
         return false;
     }
 
 
-    private void paintShot(Graphics2D g) {
+    void paintShot(Graphics2D g, Entity shooter) {
         g.setColor(Color.GREEN);
-        g.drawLine((shooter.getCol() * cellSize) + cellSize / 2,
-                (shooter.getRow() * cellSize) + cellSize / 2,
-                (projectile.getCol() * cellSize) + cellSize / 2,
-                (projectile.getRow() * cellSize) + cellSize / 2);
-        sleep();
+        if (shooter instanceof Shooter) {
+            g.drawLine((shooterProjectile.getCol() * cellSize) + cellSize / 2,
+                    shooterProjectile.getRow() * cellSize,
+                    (shooterProjectile.getCol() * cellSize) + cellSize / 2,
+                    (shooterProjectile.getRow() - 1) * cellSize);
+        }
+        if (shooter instanceof Alien) {
+            g.drawLine((shooterProjectile.getCol() * cellSize) + cellSize / 2,
+                    (shooterProjectile.getRow() * cellSize) + cellSize / 2,
+                    (shooterProjectile.getCol() * cellSize) + cellSize / 2,
+                    ((shooterProjectile.getRow() + 1) * cellSize) + cellSize / 2);
+
+        }
 
     }
 
+    int row;
+    Timer timer;
+    int col;
+    ActionListener advanceProjListener;
+
     void shoot() {
-        for (int loc = BOARD_ROWS - 1; loc >= 0; loc--) {
-            projectile = new Projectile(shooter.getCol(), loc);
-            if (removeAlienIfShot()) {
+        row = BOARD_ROWS - 1;
+        col = shooter.getCol();
+        advanceProjListener = e -> {
+            row--;
+            shooterProjectile = new Projectile(col, row);
+            shooterShooting = true;
+            repaint();
+            if (removeAlienIfShot(col, row)) {
                 if (isGameOver()) {
                     exit();
                 }
-                break;
+                sleep();
             }
-        }
+        };
+        timer = new Timer(15, advanceProjListener);
+        timer.setRepeats(true);
+        timer.start();
+
     }
 
     boolean isGameOver() {
@@ -274,9 +297,9 @@ class GameBoard extends JComponent {
         return allAliens == deadAliens;
     }
 
-    private void sleep() {
+    void sleep() {
         try {
-            Thread.sleep(10);
+            Thread.sleep(50);
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }
@@ -316,7 +339,4 @@ class GameBoard extends JComponent {
         return shooter;
     }
 
-    ArrayList<Alien> getAliens() {
-        return aliens;
-    }
 }

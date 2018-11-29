@@ -17,7 +17,7 @@ public class SpaceInvaders extends JFrame {
         gameBoard.setBackground(Color.black);
         int canvasWidth = SQUARE_SIZE * gameBoard.BOARD_COLS;
         int canvasHeight = SQUARE_SIZE * gameBoard.BOARD_ROWS;
-        setWindowProperties(canvasWidth, canvasHeight + 10 );
+        setWindowProperties(canvasWidth, canvasHeight + 10);
         JComponent mainPanel = gameBoard;
         add(mainPanel);
         addKeyListener(new MyKeyAdapter());
@@ -25,22 +25,22 @@ public class SpaceInvaders extends JFrame {
     }
 
     private void runGame() {
-       alienDir = Direction.RIGHT;
+        alienDir = Direction.RIGHT;
         ActionListener moveListener = e -> {
             alienDir = gameBoard.moveAliens(alienDir);
-            if(gameBoard.isGameOver()){
+            if (gameBoard.isGameOver()) {
                 gameBoard.exit();
             }
             repaint();
         };
-        Timer timer = new Timer(500, moveListener);
+        Timer timer = new Timer(1000, moveListener);
         timer.setRepeats(true);
         timer.start();
     }
 
 
     @Override
-    public void paint(Graphics g){
+    public void paint(Graphics g) {
 
         gameBoard.repaint();
     }
@@ -57,14 +57,16 @@ public class SpaceInvaders extends JFrame {
     private class MyKeyAdapter extends KeyAdapter {
 
         @Override
-        public void keyPressed(KeyEvent keyEvent) {
+        public void keyReleased(KeyEvent keyEvent) {
 
             if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
                 gameBoard.movement = Direction.LEFT;
                 gameBoard.moveShooter();
+                repaint();
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
                 gameBoard.movement = Direction.RIGHT;
                 gameBoard.moveShooter();
+                repaint();
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
                 gameBoard.shoot();
                 repaint();
