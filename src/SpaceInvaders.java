@@ -10,13 +10,12 @@ import java.awt.event.KeyEvent;
 public class SpaceInvaders extends JFrame {
 
     private static final int SQUARE_SIZE = 40;
-    GameBoard gameBoard;
-    Direction alienDir;
-    String title;
-    String lives;
-    Timer timer;
-    Timer warTimer;
-    boolean startNewGame;
+    private GameBoard gameBoard;
+    private Direction alienDir;
+    private String title;
+    private String lives;
+    private Timer timer;
+    private Timer warTimer;
 
     private SpaceInvaders() {
         title = "Space Invaders - Score: ";
@@ -112,22 +111,12 @@ public class SpaceInvaders extends JFrame {
                     gameBoard.shoot(gameBoard.getShooter());
                     repaint();
                     setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
-                }else if(keyEvent.getKeyCode() == KeyEvent.VK_ENTER){
-                    startNewGame = true;
-
                 }
             }
         }
     }
 
     public static void main(String[] args) {
-        SpaceInvaders space = new SpaceInvaders();
-        space.setVisible(true);
-        if(space.startNewGame){
-            space.startNewGame = false;
-            space = new SpaceInvaders();
-            space.setVisible(true);
-        }
-
+        new SpaceInvaders().setVisible(true);
     }
 }
