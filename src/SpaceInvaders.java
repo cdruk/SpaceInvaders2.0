@@ -18,7 +18,7 @@ public class SpaceInvaders extends JFrame {
         gameBoard.setBackground(Color.black);
         int canvasWidth = SQUARE_SIZE * gameBoard.BOARD_COLS;
         int canvasHeight = SQUARE_SIZE * gameBoard.BOARD_ROWS;
-        setWindowProperties(canvasWidth, canvasHeight + 10 );
+        setWindowProperties(canvasWidth, canvasHeight + 10);
         JComponent mainPanel = gameBoard;
         add(mainPanel);
         addKeyListener(new MyKeyAdapter());
@@ -38,7 +38,7 @@ public class SpaceInvaders extends JFrame {
 
 
     @Override
-    public void paint(Graphics g){
+    public void paint(Graphics g) {
 
         gameBoard.repaint();
     }

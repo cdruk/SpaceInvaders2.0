@@ -1,7 +1,5 @@
 package entities;
 
-import entities.Entity;
-
 public class Shooter extends Entity {
     private int lives = 3;
 
@@ -9,6 +7,16 @@ public class Shooter extends Entity {
         setCol(col);
         setRow(row);
     }
+
+
+    public boolean atLeftBounds() {
+        return this.getCol() == 0;
+    }
+
+    public boolean atRightBounds(int col) {
+        return this.getCol() == col - 1;
+    }
+
 
     public int getLives() {
         return lives;

@@ -1,11 +1,6 @@
 import entities.*;
-
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -42,7 +37,8 @@ class GameBoard extends JComponent {
         generateAliens();
         generateShooter();
     }
-    public Entity[][] getGameBoard() {
+
+    Entity[][] getGameBoard() {
         return gameBoard;
     }
 
@@ -180,28 +176,18 @@ class GameBoard extends JComponent {
 
     void moveShooter() {
         Entity empty = new Empty(shooter.getCol(), shooter.getRow());
-        if (movement == Direction.LEFT && !atLeftBounds()) {
+        if (movement == Direction.LEFT && !shooter.atLeftBounds()) {
             gameBoard[shooter.getCol()][shooter.getRow()] = empty;
             shooter.setCol(shooter.getCol() - 1);
             gameBoard[shooter.getCol()][shooter.getRow()] = shooter;
 
-        } else if (movement == Direction.RIGHT && !atRightBounds()) {
+        } else if (movement == Direction.RIGHT && !shooter.atRightBounds(BOARD_COLS)) {
             gameBoard[shooter.getCol()][shooter.getRow()] = empty;
             shooter.setCol(shooter.getCol() + 1);
             gameBoard[shooter.getCol()][shooter.getRow()] = shooter;
         }
         repaint();
     }
-
-
-    private boolean atLeftBounds() {
-        return shooter.getCol() == 0;
-    }
-
-    private boolean atRightBounds() {
-        return shooter.getCol() == BOARD_COLS - 1;
-    }
-
 
     private void exit() {
         System.out.println("Final Score: " + getScore());
