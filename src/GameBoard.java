@@ -3,7 +3,7 @@ import entities.*;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
-import java.awt.event.ActionListener;
+ import java.awt.event.ActionListener;
 import java.util.*;
 
 
@@ -283,7 +283,7 @@ class GameBoard extends JComponent {
                 }
                 repaint();
             };
-            alienShotTimer = new Timer(150, moveAlienShotDownListener);
+            alienShotTimer = new Timer(200, moveAlienShotDownListener);
             alienShotTimer.setRepeats(true);
             alienShotTimer.start();
         }
