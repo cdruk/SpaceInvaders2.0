@@ -85,7 +85,7 @@ class GameBoard extends JComponent {
         for (int i = 0; i < BOARD_ROWS; i++) {
             for (int j = 0; j < BOARD_COLS; j++) {
                 Entity current = oldGrid[j][i];
-                if (current instanceof Alien) {
+                if (current.getClass() == Alien.class) {
                     if (dir == Direction.LEFT) {
                         if (!columns.contains(0)) {
                             int currentCol = current.getCol();
@@ -116,7 +116,7 @@ class GameBoard extends JComponent {
                         }
                     }
 
-                } else if (current instanceof Projectile) {
+                } else if (current.getClass() == Projectile.class) {
                     Projectile proj = new Projectile(current.getCol(), current.getRow());
                     newGrid[j][i] = proj;
                 } else if (current instanceof Shooter) {
