@@ -30,11 +30,11 @@ public class SpaceInvaders extends JFrame {
         ActionListener moveListener = e -> {
             alienDir = gameBoard.moveAliens(alienDir);
             repaint();
+            gameBoard.alienShoot();
         };
         Timer timer = new Timer(1000, moveListener);
         timer.setRepeats(true);
         timer.start();
-        gameBoard.alienShoot();
     }
 
 

@@ -72,25 +72,10 @@ class GameBoard extends JComponent {
     }
 	void alienShoot()
 	{
-		ArrayList<Alien> bottowRowAliens = new ArrayList<>();
-
-		for (int col = 0; col < BOARD_COLS; col++)
-		{
-			for (int row = 0; row < BOARD_ROWS; row++)
-			{
-				if (gameBoard[col][row].getClass() == Alien.class)
-				{
-					if (gameBoard[col][row + 1].getClass() == Empty.class || gameBoard[col][row + 1].getClass() == Shooter.class)
-					{
-						bottowRowAliens.add((Alien) gameBoard[col][row]);
-					}
-				}
-			}
-		}
-
-		Collections.shuffle(bottowRowAliens);
-		int columnShootFrom = bottowRowAliens.get(0).getCol();
-		int rowShootFrom = bottowRowAliens.get(0).getRow();
+        ArrayList<Alien> bottomRowAliens = getBottomRowAliens();
+        Collections.shuffle(bottomRowAliens);
+		int columnShootFrom = bottomRowAliens.get(0).getCol();
+		int rowShootFrom = bottomRowAliens.get(0).getRow();
 		ActionListener shootFromAlien = e ->
 		{
 			int alienShotRow = rowShootFrom;
@@ -98,17 +83,37 @@ class GameBoard extends JComponent {
 			alienProjectile = new Projectile(columnShootFrom, alienShotRow);
 			alienShooting = true;
 			repaint();
-			if (alienShotRow == shooter.getRow())//hit shooter
+			if (alienShotRow == shooter.getRow())
 			{
 				shooter.setLives(shooter.getLives() - 1);
 			}
 		};
-		Timer timer = new Timer(500, shootFromAlien);
+		Timer timer = new Timer(1000, shootFromAlien);
 		timer.setRepeats(true);
 		timer.start();
 	}
 
-	void paintAlienShot(Graphics2D g)
+    private ArrayList<Alien> getBottomRowAliens()
+    {
+        ArrayList<Alien> bottowRowAliens = new ArrayList<>();
+
+        for (int col = 0; col < BOARD_COLS; col++)
+        {
+            for (int row = 0; row < BOARD_ROWS; row++)
+            {
+                if (gameBoard[col][row].getClass() == Alien.class)
+                {
+                    if (gameBoard[col][row + 1].getClass() == Empty.class || gameBoard[col][row + 1].getClass() == Shooter.class)
+                    {
+                        bottowRowAliens.add((Alien) gameBoard[col][row]);
+                    }
+                }
+            }
+        }
+        return bottowRowAliens;
+    }
+
+    void paintAlienShot(Graphics2D g)
 	{
 		g.setColor(Color.WHITE);
 		g.drawLine((alienProjectile.getCol() * cellSize) + cellSize / 2,
