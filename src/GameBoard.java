@@ -3,6 +3,7 @@ import entities.*;
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.ActionListener;
 import java.util.*;
 
@@ -314,10 +315,23 @@ class GameBoard extends JComponent {
 
     void war() {
         ArrayList<Alien> aliens = getBottomRowAliens();
+        ArrayList<Integer> possibleCols = new ArrayList<>();
+        for(int i = 0; i < 10; i++)
+        {
+            for(Alien alien : aliens)
+            {
+                int col = alien.getCol();
+                if(!possibleCols.contains(col))
+                {
+                    possibleCols.add(col);
+                }
+            }
+        }
         Random random = new Random();
-        int randomAlien = random.nextInt(10);
+        int randomAlien = random.nextInt(possibleCols.size());
         Collections.shuffle(aliens);
-        shootingAlien = getBottomRowAliens().get(randomAlien);
+        Collections.shuffle(possibleCols);
+        shootingAlien = aliens.get(randomAlien);
         shoot(shootingAlien);
     }
 
