@@ -1,4 +1,4 @@
-import entities.Direction;
+ import entities.Direction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,14 +16,14 @@ public class SpaceInvaders extends JFrame {
     String lives;
 
     private SpaceInvaders() {
-        title = "Space Invaders - Score: ";
-        lives = "               Lives: ";
         gameBoard = new GameBoard(SQUARE_SIZE);
         gameBoard.setBackground(Color.black);
         int canvasWidth = SQUARE_SIZE * gameBoard.BOARD_COLS;
         int canvasHeight = SQUARE_SIZE * gameBoard.BOARD_ROWS;
         setWindowProperties(canvasWidth, canvasHeight + 10);
         JComponent mainPanel = gameBoard;
+        title = "Space Invaders - Score: ";
+        lives = "               Lives: ";
         add(mainPanel);
         addKeyListener(new MyKeyAdapter());
         runGame();
@@ -75,16 +75,14 @@ public class SpaceInvaders extends JFrame {
     private class MyKeyAdapter extends KeyAdapter {
 
         @Override
-        public void keyReleased(KeyEvent keyEvent) {
+        public void keyPressed(KeyEvent keyEvent) {
 
             if (keyEvent.getKeyCode() == KeyEvent.VK_LEFT) {
                 gameBoard.movement = Direction.LEFT;
                 gameBoard.moveShooter();
-                repaint();
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_RIGHT) {
                 gameBoard.movement = Direction.RIGHT;
                 gameBoard.moveShooter();
-                repaint();
             } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
                 gameBoard.shooterShoot(gameBoard.getShooter());
                 repaint();
