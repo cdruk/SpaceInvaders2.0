@@ -1,4 +1,4 @@
-package main.java.spaceinvaders;
+package spaceinvaders;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

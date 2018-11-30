@@ -1,4 +1,4 @@
-package main.java.spaceinvaders.entities;
+package spaceinvaders.entities;
 
 public class Shooter extends Entity {
     private int lives = 3;

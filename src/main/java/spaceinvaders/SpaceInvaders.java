@@ -1,6 +1,7 @@
-package main.java.spaceinvaders;
+package spaceinvaders;
 
-import main.java.spaceinvaders.entities.Direction;
+import spaceinvaders.GameBoard;
+import spaceinvaders.entities.Direction;
 
 import javax.swing.*;
 import java.awt.*;

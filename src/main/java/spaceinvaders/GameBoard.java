@@ -1,6 +1,6 @@
-package main.java.spaceinvaders;
-;
-import main.java.spaceinvaders.entities.*;
+package spaceinvaders;
+
+import spaceinvaders.entities.*;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.*;
 
 
-class GameBoard extends JComponent {
+public class GameBoard extends JComponent {
     private int cellSize;
     private Shooter shooter;
     private Projectile shooterProjectile;
@@ -22,9 +22,9 @@ class GameBoard extends JComponent {
     }
 
     private Entity[][] gameBoard;
-    final int BOARD_ROWS = 12;
-    final int BOARD_COLS = 15;
-    Direction movement;
+    public final int BOARD_ROWS = 12;
+    public final int BOARD_COLS = 15;
+    public Direction movement;
     private boolean shooting;
     private Image alienPic;
     private Image shooterPic;
@@ -34,7 +34,7 @@ class GameBoard extends JComponent {
     private boolean gameOver = false;
     private String endMessage;
 
-    GameBoard(int cellSize) {
+    public GameBoard(int cellSize) {
         gameBoard = new Entity[BOARD_COLS][BOARD_ROWS];
         this.cellSize = cellSize;
         alienPic = new ImageCreator().createAlienPic(cellSize);
@@ -192,7 +192,7 @@ class GameBoard extends JComponent {
         g.drawImage(shooterPic, shooter.getCol() * cellSize, shooter.getRow() * cellSize, null);
     }
 
-    void moveShooter() {
+    public void moveShooter() {
         Entity empty = new Empty(shooter.getCol(), shooter.getRow());
         if (movement == Direction.LEFT && !shooter.atLeftBounds()) {
             gameBoard[shooter.getCol()][shooter.getRow()] = empty;
@@ -333,7 +333,7 @@ class GameBoard extends JComponent {
         return over;
     }
 
-    Shooter getShooter() {
+    public Shooter getShooter() {
         return shooter;
     }
 

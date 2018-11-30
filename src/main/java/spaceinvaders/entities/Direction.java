@@ -1,4 +1,4 @@
-package main.java.spaceinvaders.entities;
+package spaceinvaders.entities;
 
 public enum Direction {
     LEFT,

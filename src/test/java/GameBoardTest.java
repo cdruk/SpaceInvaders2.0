@@ -1,10 +1,13 @@
-import entities.*;
-import org.junit.Test;
 
+import org.junit.Test;
+import spaceinvaders.*;
+import spaceinvaders.entities.*;
+
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 
 public class GameBoardTest {
-    GameBoard board = new GameBoard(40);
+    private GameBoard board = new GameBoard(40);
 
 
     @Test
@@ -13,8 +16,8 @@ public class GameBoardTest {
             for (int col = 0; col < board.BOARD_COLS - 5; col++) {
                 Entity entity = board.getGameBoard()[col][row];
                 assertTrue(entity instanceof Alien);
-                assertTrue(entity.getCol() == col);
-                assertTrue(entity.getRow() == row);
+                assertEquals(entity.getCol(), col);
+                assertEquals(entity.getRow(), row);
             }
 
         }
@@ -29,9 +32,9 @@ public class GameBoardTest {
         board.movement = Direction.RIGHT;
         board.moveShooter();
         int newCol = shooter.getCol();
-        assertTrue(newCol == oldCol + 1);
+        assertEquals(newCol, oldCol + 1);
         int newRow = shooter.getRow();
-        assertTrue(oldRow == newRow);
+        assertEquals(oldRow, newRow);
         assertTrue(board.getGameBoard()[newCol][newRow] instanceof Shooter);
         assertTrue(board.getGameBoard()[oldCol][oldRow] instanceof Empty);
     }
