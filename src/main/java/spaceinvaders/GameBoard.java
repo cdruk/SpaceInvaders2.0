@@ -258,6 +258,9 @@ public class GameBoard extends JComponent {
 
     void shoot(Entity entity) {
         if (entity.getClass() == Shooter.class) {
+            if (shooterShotTimer != null && shooterShotTimer.isRunning()) {
+                return;
+            }
             shooterRow = BOARD_ROWS - 1;
             shooterCol = shooter.getCol();
             ActionListener advanceProjListener = e -> {
@@ -265,7 +268,7 @@ public class GameBoard extends JComponent {
                 shooterProjectile = new Projectile(shooterCol, shooterRow);
                 shooterShooting = true;
                 repaint();
-                if (removeAlienIfShot() || shooterRow == 0) {
+                if (removeAlienIfShot() || shooterRow <= 0) {
                     shooterShooting = false;
                     shooterProjectile = null;
                     shooterShotTimer.stop();
@@ -275,12 +278,11 @@ public class GameBoard extends JComponent {
                 }
                 repaint();
             };
-
-            shooterShotTimer = new Timer(10, advanceProjListener);
+            shooterShotTimer = new Timer(30, advanceProjListener);
             shooterShotTimer.setRepeats(true);
             shooterShotTimer.start();
 
-        }else if (entity.getClass() == Alien.class) {
+        } else if (entity.getClass() == Alien.class) {
             shootingAlien = (Alien) entity;
             alienProjectile = new Projectile(shootingAlien.getCol(), shootingAlien.getRow());
             alienRow = shootingAlien.getRow();
