@@ -1,4 +1,4 @@
-package entities;
+package main.java.spaceinvaders.entities;
 
 public class Empty extends Entity {
 

@@ -1,4 +1,4 @@
-package entities;
+package main.java.spaceinvaders.entities;
 
 public abstract class Entity {
     private int col;

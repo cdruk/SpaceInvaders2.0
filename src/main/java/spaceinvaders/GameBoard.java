@@ -1,4 +1,6 @@
-import entities.*;
+package main.java.spaceinvaders;
+;
+import main.java.spaceinvaders.entities.*;
 
 import javax.swing.*;
 import javax.swing.Timer;
@@ -23,7 +25,6 @@ class GameBoard extends JComponent {
     final int BOARD_ROWS = 12;
     final int BOARD_COLS = 15;
     Direction movement;
-    private Graphics2D g;
     private boolean shooting;
     private Image alienPic;
     private Image shooterPic;
@@ -146,7 +147,7 @@ class GameBoard extends JComponent {
 
     @Override
     public void paintComponent(Graphics graphics) {
-        g = (Graphics2D) graphics;
+        Graphics2D g = (Graphics2D) graphics;
         g.setColor(Color.black);
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         paintAliens(g);
@@ -298,7 +299,7 @@ class GameBoard extends JComponent {
     }
 
 
-    public boolean isGameOver() {
+    boolean isGameOver() {
         if (gameLost() || gameWon()) {
             gameOver = true;
         }

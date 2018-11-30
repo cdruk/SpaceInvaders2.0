@@ -1,3 +1,5 @@
+package main.java.spaceinvaders;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;

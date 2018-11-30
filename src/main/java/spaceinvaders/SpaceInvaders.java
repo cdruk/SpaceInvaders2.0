@@ -1,4 +1,6 @@
-import entities.Direction;
+package main.java.spaceinvaders;
+
+import main.java.spaceinvaders.entities.Direction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,22 +14,22 @@ public class SpaceInvaders extends JFrame {
     private static final int SQUARE_SIZE = 40;
     private GameBoard gameBoard;
     private Direction alienDir;
-    private String title;
-    private String lives;
+    final private String TITLE;
+    final private String LIVES;
     private Timer timer;
     private Timer warTimer;
 
     private SpaceInvaders() {
-        title = "Space Invaders - Score: ";
-        lives = "               Lives: ";
+        TITLE = "Space Invaders - Score: ";
+        LIVES = "               Lives: ";
         gameBoard = new GameBoard(SQUARE_SIZE);
         gameBoard.setBackground(Color.black);
-        int canvasWidth = SQUARE_SIZE * gameBoard.BOARD_COLS;
-        int canvasHeight = SQUARE_SIZE * gameBoard.BOARD_ROWS;
-        setWindowProperties(canvasWidth, canvasHeight + 10);
+        final int CANVAS_WIDTH = SQUARE_SIZE * gameBoard.BOARD_COLS;
+        final int CANVAS_HEIGHT = SQUARE_SIZE * gameBoard.BOARD_ROWS;
+        setWindowProperties(CANVAS_WIDTH, CANVAS_HEIGHT + 10);
         JComponent mainPanel = gameBoard;
         add(mainPanel);
-        addKeyListener(new MyKeyAdapter());
+        addKeyListener(new buttonPressAdapter());
         runGame();
         if (gameBoard.isGameOver()) {
             gameBoard = null;
@@ -61,7 +63,7 @@ public class SpaceInvaders extends JFrame {
 
         ActionListener warListener = e -> {
             gameBoard.war();
-            setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
+            setTitle(TITLE + gameBoard.getScore() + LIVES + gameBoard.getShooter().getLives());
             alienDir = gameBoard.moveAliens(alienDir);
 
         };
@@ -73,7 +75,7 @@ public class SpaceInvaders extends JFrame {
     }
 
     private void stopGame() {
-        setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
+        setTitle(TITLE + gameBoard.getScore() + LIVES + gameBoard.getShooter().getLives());
         timer.stop();
         warTimer.stop();
         gameBoard = null;
@@ -89,14 +91,14 @@ public class SpaceInvaders extends JFrame {
 
     private void setWindowProperties(int width, int height) {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
+        setTitle(TITLE + gameBoard.getScore() + LIVES + gameBoard.getShooter().getLives());
         setSize(width, height);
         setResizable(false);
         setVisible(true);
         setLocationRelativeTo(null);
     }
 
-    private class MyKeyAdapter extends KeyAdapter {
+    private class buttonPressAdapter extends KeyAdapter {
 
         @Override
         public void keyPressed(KeyEvent keyEvent) {
@@ -110,7 +112,7 @@ public class SpaceInvaders extends JFrame {
                 } else if (keyEvent.getKeyCode() == KeyEvent.VK_SPACE) {
                     gameBoard.shoot(gameBoard.getShooter());
                     repaint();
-                    setTitle(title + gameBoard.getScore() + lives + gameBoard.getShooter().getLives());
+                    setTitle(TITLE + gameBoard.getScore() + LIVES + gameBoard.getShooter().getLives());
                 }
             }
         }
